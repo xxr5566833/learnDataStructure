@@ -62,5 +62,8 @@
     <ClCompile Include="number.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="headLinkedList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

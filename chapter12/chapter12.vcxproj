@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="array.cpp" />
+    <ClCompile Include="headLinkedList.cpp" />
     <ClCompile Include="number.cpp" />
     <ClCompile Include="binaryTree.cpp" />
     <ClCompile Include="chapter15.cpp" />

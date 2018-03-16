@@ -786,7 +786,7 @@ std::vector<std::vector<int> > Print(bTree* pRoot) {
         }
         return result;
     }
-int main(int argc, char* argv[])
+/*int main(int argc, char* argv[])
 {
 	root = new bTree();
 	root->key = 12;
@@ -836,5 +836,5 @@ int main(int argc, char* argv[])
 		std::cout << "\n";
 	}
 	return 0;
-}
+}*/
 

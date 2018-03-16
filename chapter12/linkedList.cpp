@@ -7,6 +7,8 @@ typedef struct node
 }Node;
 Node *head = 0;
 
+//总结：链表的插入，不管哪一种，都是①先找到它的前一个节点②建立它与前一个节点和后一个节点的关系
+//所以插入时考虑的情况就是两种，①前一个节点null②前一个节点不是null
 void insert(int key)
 {
 	Node *n = new Node();
@@ -39,6 +41,43 @@ void insert2Tail(int key)
 	}
 }
 
+//如果参数是一个int类型的index，要求插入到第index个位置上
+void insertAfterIndex(int index, int key)
+{
+	if(index < 0)
+		return ;
+	Node *n = new Node();
+	n->key = key;
+	
+	if(index == 0)
+	{
+		//此时不需要检查head是否是NULL
+		n->next = head;
+		head = n;
+	}
+	else{
+		Node *p = head;
+		int count = 0;
+		while(count <= index && p)
+		{
+			p = p->next;
+			count ++;
+		}
+		if(count == index)
+		{
+			//说明此时p是第index-1个位置的节点
+			n->next = p->next;
+			p->next = n;
+		}
+		else{
+			//说明p还没到第index - 1个位置链表就结束
+			return ;
+		}
+	}
+}
+
+//总结：删除也是一样的，无非就是修改这个节点的前一个节点的next域，所以关键就是找到它的前一个节点
+//两种情况：①前一个节点是null②不是null
 void del(Node *node)
 {
 	//又忘了判断了卧槽
@@ -71,6 +110,27 @@ void del(Node *node)
 			std::cout << "没有找到" << std::endl;
 		}
 
+	}
+}
+
+//妙啊，我们不光可以通过改变指针来改变相应的结点，我们还可以通过改变节点的内容继而改变相应的结点
+//O(1)时间内删除链表内的结点
+//首先肯定要保证这个节点是在链表内的,这个肯定要交给调用者保证，如果放在这里检查，那么时间复杂度一定有O(n)了
+void delO1(Node *node)
+{
+	if(!node)
+		return ;
+	if(node->next)
+	{
+		//说明不是最后一个节点，那么赋值后删除
+		Node *oldnext = node->next;
+		node->key = node->next->key;
+		node->next = node->next->next;
+		delete oldnext;
+	}
+	else{
+		//最后一个节点只能用普通的方法删除了
+		del(node);
 	}
 }
 
@@ -141,28 +201,6 @@ void recursionReversePrint(Node *node)
 	if(node->next)
 		recursionReversePrint(node->next);
 	std::cout << node->key << std::endl;
-}
-
-
-//妙啊，我们不光可以通过改变指针来改变相应的结点，我们还可以通过改变节点的内容继而改变相应的结点
-//O(1)时间内删除链表内的结点
-//首先肯定要保证这个节点是在链表内的,这个肯定要交给调用者保证，如果放在这里检查，那么时间复杂度一定有O(n)了
-void delO1(Node *node)
-{
-	if(!node)
-		return ;
-	if(node->next)
-	{
-		//说明不是最后一个节点，那么赋值后删除
-		Node *oldnext = node->next;
-		node->key = node->next->key;
-		node->next = node->next->next;
-		delete oldnext;
-	}
-	else{
-		//最后一个节点只能用普通的方法删除了
-		del(node);
-	}
 }
 
 //翻转链表，这个之前做过，依次遍历每个结点
@@ -321,18 +359,12 @@ Node *commonNode()
 }
 
 
-struct ListNode {
-    int val;
-    struct ListNode *next;
-    ListNode(int x) :
-        val(x), next(NULL) {
-    }
-};
 
 
-    ListNode* EntryNodeOfLoop(ListNode* pHead)
+//如果链表有环，那么输出这个环的头结点
+    Node* EntryNodeOfLoop(Node* pHead)
     {
-        ListNode *p = pHead, *q = pHead;
+        Node *p = pHead, *q = pHead;
         if(pHead == 0)
             return pHead;
         while(p != q)
@@ -354,22 +386,22 @@ struct ListNode {
             p = p->next;
             q = q->next;
         }
-		std::cout << p->val << std::endl;
+		std::cout << p->key << std::endl;
         return p;
     }
 //删除重复节点
-ListNode* deleteDuplication(ListNode* pHead)
+Node* deleteDuplication(Node* pHead)
     {
         if(!pHead)
             return pHead;
-        ListNode *begin = 0;
-        ListNode *last = 0;
+        Node *begin = 0;
+        Node *last = 0;
         while(pHead)
         {
-            int val = pHead->val;
-            ListNode *p = pHead;
+            int val = pHead->key;
+            Node *p = pHead;
             pHead = pHead->next;
-            while(pHead && pHead->val == val)
+            while(pHead && pHead->key == val)
             {
                 pHead = pHead->next;
             }
@@ -431,9 +463,83 @@ RandomListNode* Clone(RandomListNode* pHead)
         }
         return head;
     }
-/*int main(int argc, char *argv[])
+
+//循环链表的相关操作（先写上思路，具体实现有时间写）：
+/*
+1.
+*/
+
+//约瑟夫环问题，模拟解决方法
+void Josephus(int m, int num)
 {
-	insert(1);
+	//n个人 编号分别是 1 - n，组成
+	//循环链表，从1报数，如果到了某个节点报数值为m，那么这个节点被淘汰
+	//求最后剩下的那个人的key值
+	//记得上次ccf这道题我是用数组实现的。。。
+
+	//1.建立循环链表
+	Node *head = new Node();
+	head->key = 1;
+	Node *q;
+	for(int i = num ; i > 1 ; i --)
+	{
+		Node *n = new Node();
+		n->key = i;
+		if(i == num)
+		{
+			n->next = head;
+			q = n;
+		}
+		else
+			n->next = head->next;
+		head->next = n;
+	}
+
+	//2.开始模拟
+	int count = 1;
+	Node *p = head;
+	while(p->next != p)
+	{
+		if(count != m)
+		{
+			count++;
+			q = p;
+			p = p->next;
+		}
+		else{
+			q->next = p->next;
+			delete p;
+			p = q->next;
+			count = 1;
+		}
+	}
+	std::cout << p->key << std::endl;
+}
+
+//递归实现的约瑟夫环问题，约瑟夫环自己试一遍就知道实际上是由多个小的子问题构成
+//反映射回来这里一开始有些乱
+int JosephusRecursive(int m, int num)
+{
+	if(num > 1)
+	{
+		int s = 1 + (m - 1) % num;
+		int r = JosephusRecursive(m, num - 1);
+		int p;
+		if(s + r <= num)
+			p = s + r;
+		else
+			p = s + r - num;
+		return p;
+	}
+	else{
+		return 1;
+	}
+	
+}
+
+int main(int argc, char *argv[])
+{
+	/*insert(1);
 	insert2Tail(7);
 	insert2Tail(9);
 	insert2Tail(11);
@@ -452,6 +558,8 @@ RandomListNode* Clone(RandomListNode* pHead)
 	{
 		std::cout << p2->key << std::endl;
 		p2 = p2->next;
-	}
+	}*/
+	int result = JosephusRecursive(5, 7);
+	std::cout << result << std::endl;
 	return 0;
-}*/
+}
