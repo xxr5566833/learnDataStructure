@@ -85,6 +85,31 @@ void oddFirst(int a[], int size)
 		std::cout << a[i] << std::endl;
 	}
 }
+//将a中所有非零元素一次移动到数组的前端，清华数据结构2.7
+void notZeroFirst(int a[], int size)
+{
+	int i = 0;
+	int j = size - 1;
+	while(i < j)
+	{
+		while(i < j && a[i] != 0)
+		{
+			i++;
+		}
+		while(i < j && a[j] == 0)
+		{
+			j--;
+		}
+		if(i != j)
+		{
+			int temp = a[i];
+			a[i] = a[j];
+			a[j] = temp;
+		}
+		i++;
+		j--;
+	}
+}
 
 //从外向里顺时针顺序打印数字，需要检查二维数组是否合格，但是不好检查，因为C++对于越界不报错,那我现在就直接用了
 //思路：每一次都是打印一个“长方形”的一条边
@@ -142,19 +167,104 @@ void clockWisePrint(int **a, int size)
 //发现已经加过了，那么说明这个数字是重复的
 
 
-/*int main(int argc, char* argv[])
+//把一个数组逆置，清华大学数据结构2.6
+//书上的做法和算法导论里的快排的partition一样
+void reverseArray(int a[], int size)
 {
-	int size = 3;
-	int **a = new int*[size];
-	for(int i = 0 ; i < size ; i++)
+	//数组逆序，交换就行了
+	for(int i = 0 ; i < size / 2 ; i ++)
 	{
-		a[i] = new int[size];
-		for(int j = 0 ; j < size ; j++)
+		int temp = a[i];
+		a[i] = a[size - i - 1];
+		a[size - i - 1] = temp;
+	}
+}
+//不多于3n/2次的平均比较次数，找到最大值和最小值
+//记得在大二第一次看这个算法的时候都看不懂。。
+void findMaxAndMin(int a[], int size)
+{
+	if(size <= 0)
+		return ;
+	int min = 0x7fffffff;
+	int max = 0x80000000;
+	for(int i = 0 ; i < size ; i = i + 2)
+	{
+		int num1 = a[i];
+		if(i + 1 < size)
 		{
-			a[i][j] = i * size + j + 1;
+			//即下一个元素存在
+			int num2 = a[i + 1];
+			int tempmin;
+			int tempmax;
+			if(num1 < num2)
+			{
+				tempmin = num1;
+				tempmax = num2;
+			}
+			else{
+				tempmax = num1;
+				tempmin = num2;
+			}
+			if(tempmax > max)
+			{
+				max = tempmax;
+			}
+			if(tempmin < min)
+				min = tempmin;
+		}
+		else{
+			if(num1 > max)
+				max = num1;
+			if(num1 < min)
+				min = num1;
 		}
 	}
-	clockWisePrint(a, size);
+	std::cout << max << std::endl;
+	std::cout << min << std::endl;
+}
+
+//两个顺序表比较大小，清华数据结构2.13，定义在这里
+//a < b返回-1 a==b 返回0 a > b返回1
+int compare2Array(char *a, char *b)
+{
+	//不如说这个就是strcmp函数的实现
+	//现在约定a和b都是以\0为结束符的字符串，现在比较这两个字符串
+	//如果a或b为null
+	if(!a || !b)
+		return -2;
+	while(*a && *b && *a == *b)
+	{
+		a++;
+		b++;
+	}
+	if(!(*a))
+	{
+		//a结束了
+		if(!(*b))
+		{
+			//b也结束了
+			return 0;
+		}
+		else{
+			return -1;
+		}
+	}
+	else{
+		if(!(*b))
+			return 1;
+		else{
+			int result;
+			*a > *b ? result = 1 : result = -1;
+			return result;
+		}
+	}
+}
+
+/*int main(int argc, char* argv[])
+{
+	char *a = " 2";
+	char *b = "  ";
+	std::cout << compare2Array(a, b) << std::endl;
 
 	return 0;
 }*/

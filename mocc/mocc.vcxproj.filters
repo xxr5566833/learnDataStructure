@@ -29,43 +29,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="chapter15.cpp">
+    <ClCompile Include="mooc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="swordpoint.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="linkedList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="binaryTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="stack.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="queue.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="search.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="sort.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="array.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="number.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="headLinkedList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="doubleLinkedList.cpp">
+    <ClCompile Include="4th.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

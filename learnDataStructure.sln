@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vector", "Vector\Vector.vcxproj", "{05131361-396D-49DD-A181-E75CE7BA2C46}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mooc", "mocc\mocc.vcxproj", "{AEC91E50-DF5A-49B2-9070-5775B4278521}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05131361-396D-49DD-A181-E75CE7BA2C46}.Debug|Win32.ActiveCfg = Debug|Win32
+		{05131361-396D-49DD-A181-E75CE7BA2C46}.Debug|Win32.Build.0 = Debug|Win32
+		{05131361-396D-49DD-A181-E75CE7BA2C46}.Release|Win32.ActiveCfg = Release|Win32
+		{05131361-396D-49DD-A181-E75CE7BA2C46}.Release|Win32.Build.0 = Release|Win32
+		{AEC91E50-DF5A-49B2-9070-5775B4278521}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AEC91E50-DF5A-49B2-9070-5775B4278521}.Debug|Win32.Build.0 = Debug|Win32
+		{AEC91E50-DF5A-49B2-9070-5775B4278521}.Release|Win32.ActiveCfg = Release|Win32
+		{AEC91E50-DF5A-49B2-9070-5775B4278521}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

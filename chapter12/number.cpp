@@ -133,8 +133,6 @@ void printNBit10baseNumber(int n)
 //全排列也可以实现啊!!
 //递归实现全排列
 
-
-
 void quanpailiePrint(int size, char *a, int index)
 {
 	if(size <= 0)
@@ -181,9 +179,24 @@ void quanpailiePrint(int size, char *a, int index)
 //整除2a+1 ，
 //书上的思路是维护一个 (begin, end)最大值为end，最小值为begin的序列，大了就增加begin减少数字个数，笑了就增大end，增加数字个数
 
-/*int main(int argc, char* argv[])
+
+//不用数组，仅需两个数字就实现斐波那契（邓老师视频）
+//设fib(0) = 0
+int fib(int n)
+{
+	if(n < 0)
+		return -1;
+	int f = 0, g = 1;
+	while(n--)
+	{
+		g = f + g;
+		f = g - f;
+	}
+	return f;
+}
+int main(int argc, char* argv[])
 {
 	quanpailiePrint(2, 0, 0);
 	return 0;
-}*/
+}
 

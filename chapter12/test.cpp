@@ -69,7 +69,8 @@ int findMaxSubarray(int a[], int left, int right, int *maxleftindex, int *maxrig
 		}
 	}
 }
-
+//这里是错误的，动态规划的[0, i]的子问题f(i)表示的是以i为结尾的子数组的最大的和，而不是[0,i]这个数组内最大的子数组的和
+//之前的理解是错误的
 int findMaxSubarray2(int a[], int size, int *maxindexi, int *maxindexj)
 {
 	int max = 0x80000001;

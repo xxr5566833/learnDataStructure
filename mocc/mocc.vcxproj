@@ -11,9 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{45A4955D-6A3C-49A0-B6EB-7A970440B08B}</ProjectGuid>
+    <ProjectGuid>{AEC91E50-DF5A-49B2-9070-5775B4278521}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>chapter12</RootNamespace>
+    <RootNamespace>mocc</RootNamespace>
+    <ProjectName>mooc</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,23 +80,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="array.cpp" />
-    <ClCompile Include="doubleLinkedList.cpp" />
-    <ClCompile Include="headLinkedList.cpp" />
-    <ClCompile Include="number.cpp" />
-    <ClCompile Include="binaryTree.cpp" />
-    <ClCompile Include="chapter15.cpp" />
-    <ClCompile Include="linkedList.cpp" />
-    <ClCompile Include="queue.cpp" />
-    <ClCompile Include="search.cpp" />
-    <ClCompile Include="sort.cpp" />
-    <ClCompile Include="stack.cpp" />
+    <ClCompile Include="4th.cpp" />
+    <ClCompile Include="mooc.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="swordpoint.cpp" />
-    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

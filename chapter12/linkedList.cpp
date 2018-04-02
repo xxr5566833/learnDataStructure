@@ -470,7 +470,7 @@ RandomListNode* Clone(RandomListNode* pHead)
 */
 
 //约瑟夫环问题，模拟解决方法
-void Josephus(int m, int num)
+int Josephus(int m, int num)
 {
 	//n个人 编号分别是 1 - n，组成
 	//循环链表，从1报数，如果到了某个节点报数值为m，那么这个节点被淘汰
@@ -498,6 +498,8 @@ void Josephus(int m, int num)
 	//2.开始模拟
 	int count = 1;
 	Node *p = head;
+	//仅仅是单链表的话，那么用一个变量维护节点的父亲节点即可实现删除
+	//双向链表就不需要勒
 	while(p->next != p)
 	{
 		if(count != m)
@@ -513,7 +515,7 @@ void Josephus(int m, int num)
 			count = 1;
 		}
 	}
-	std::cout << p->key << std::endl;
+	return p->key;
 }
 
 //递归实现的约瑟夫环问题，约瑟夫环自己试一遍就知道实际上是由多个小的子问题构成
@@ -537,9 +539,72 @@ int JosephusRecursive(int m, int num)
 	
 }
 
-int main(int argc, char *argv[])
+//数据解决约瑟夫环问题
+int JosephusArray(int m, int num)
 {
-	/*insert(1);
+	//记得我上次ccf就是用数组解决的。。
+	//记得当时写了好多，思路也不清晰，现在好多了
+	int *circle = new int[num];
+	for(int i = 0 ; i < num ; i++)
+		circle[i] = i + 1;
+	int length = num;
+	int begin = 0;
+	while(length > 1)
+	{
+		//每一次都从begin所指的人开始，找到要踢出的人
+		//然后减少相应的length
+		int count = 1;
+		while(count < m)
+		{
+			count++;
+			begin++;
+			if(begin == length)
+				begin = 0;
+		}
+		int selected = circle[begin];
+		//这个人已经被找到，那么删除这个人
+		for(int i = begin + 1 ; i < length ; i ++)
+			circle[i - 1] = circle[i];
+		length --;
+		begin = begin % length;
+	}
+	return circle[0];
+}
+
+//编写一个递归函数，计算多项式的值
+typedef struct term
+{
+	double coef;
+	double exp;
+	struct term *link;
+}Term;
+
+Term *first = 0;
+//假设这个链表是按照系数从小到大排列的，而且系数为0的项不省略，如果系数为0的项都省略了，即链表中的节点的指数并不连续，
+double compute(Term *first, double x)
+{
+	if(first->link)
+	{
+		//因为下一项的指数可能和这一项不连续，所以这里需要特殊处理
+		int count = 1;
+		double result = 1;
+		while(count + first->exp < first->link->exp)
+		{
+			count ++ ;
+			result = result * x;
+		}
+		result = result * compute(first->link, x);
+		return result * x + first->coef;
+	}
+	else{
+		return first->coef;
+	}
+}
+
+
+/*int main(int argc, char *argv[])
+{
+	insert(1);
 	insert2Tail(7);
 	insert2Tail(9);
 	insert2Tail(11);
@@ -558,8 +623,28 @@ int main(int argc, char *argv[])
 	{
 		std::cout << p2->key << std::endl;
 		p2 = p2->next;
-	}*/
-	int result = JosephusRecursive(5, 7);
-	std::cout << result << std::endl;
+	}
+	int result1 = JosephusRecursive(3, 10);
+	int result2 = JosephusArray(3, 10);
+	std::cout << result1 << " " << result2 <<std::endl;
+
+	first = new Term();
+	first->coef = 1;
+	first->exp = 0;
+	Term *p2 = new Term();
+	p2->coef = -2;
+	p2->exp = 2;
+	first->link = p2;
+	Term *p3 = new Term();
+	p3->coef = 10;
+	p3->exp = 3;
+	p2->link = p3;
+	Term *p4 = new Term();
+	p4->coef = 6;
+	p4->exp = 6;
+	p3->link = p4;
+
+	std::cout << compute(first, 2) << std::endl;
+
 	return 0;
-}
+}*/

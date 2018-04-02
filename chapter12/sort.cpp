@@ -26,6 +26,9 @@ void quickSort(int a[], int left, int right)
 	//错误： j最大到right - 1，right这里是最后一个有效位置的指针
 	while(i < j)
 	{
+		//此时算法的不变性满足[0, i)一定 <key 而(j, n)一定大于等于key
+		//那么最后i == j时，a[i]一定是一个满足大于等于key的元素，所以后面直接拿i位置的元素与最后一个元素做交换
+		//邓老师的算法的不变性真的对分析算法很有用
 		while(i < j )
 		{
 			i++;
@@ -82,20 +85,20 @@ void countSort(int a[], int size, int range)
 
 }
 
+//可以把标志位放在for循环里
+//!!原来每一趟都从0 到 size - 1扫描，可是实际上，每一趟扫描都会把那个最大的元素放在最后一个位置！，还是理解的不够深啊!!
 void bubbleSort(int a[], int size)
 {
-	bool flag = true;
-	while(flag)
+	for(bool sorted = false ; sorted = ! sorted ; size--)
 	{
-		flag = false;
-		for(int i = 1 ; i < size ; i++)
+		for(int i = 0 ; i < size - 1 ; i++)
 		{
-			if(a[i] < a[i - 1])
+			if(a[i] > a[i + 1])
 			{
-				a[i] = a[i] ^ a[i - 1];
-				a[i - 1] = a[i] ^ a[i - 1];
-				a[i] = a[i] ^ a[i - 1];
-				flag = true;
+				int temp = a[i];
+				a[i] = a[i + 1];
+				a[i + 1] = a[i];
+				sorted = false;
 			}
 		}
 	}
@@ -123,6 +126,8 @@ void bubbleSort(int a[], int size)
 //第二次写时，就直接把它当成插入排序写去了，但实际上和插入排序不同
 //因为这里是合并两个已经排好序的数组，所以每一次只需要比较两个数组的头即可，不需要和之前的全部比较
 //又想了一下，之前的插入排序果然不需要，因为a数组是排好序的，所以完全不需要从a数组的最右边开始比较，a数组的最右边一定比a数组的头元素要大
+
+//一周后再看：还是用辅助空间吧，不然这个算法的复杂度就到O(n2)了
 void merge(int a[], int left, int right)
 {
 	int mid = (left + right) / 2;
@@ -314,7 +319,7 @@ void heapsort(int a[], int size)
 {
 	
 	int a[] = {8, 7, 6, 5, 4, 3, 2, 1};
-	insertSort(a, 8);
+	bubbleSort(a, 8);
 	for(int i = 0 ; i < 8 ; i++)
 	{
 		std::cout << a[i] << std::endl;
