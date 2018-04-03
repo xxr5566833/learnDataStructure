@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Vector.h"
+#include "Bitmap.h"
 #include <stdint.h>
 unsigned long int next = 1;
 int myrand2(void)
@@ -99,39 +100,8 @@ void quickSort(T *a, int lo, int hi)
 	}
 }
 
-int _tmain(int argc, _TCHAR* argv[])
+void testSearch()
 {
-	/*const int a[] = {8, 1, 4, 2, 3, 5, 6, 7};
-	Vector<int> myvector = Vector<int>(a, 8);
-	myvector.mergeSort(0, myvector.size());
-	myvector.print();*/
-	/*int size = 5;
-	int a[] = {1, 3, 5, 7, 5};
-	for(int i = 0 ; i <= size << 1 ; i++)
-	{
-		std::cout << "数字为" << i << std::endl;
-		std::cout << binS(a, size, i) << std::endl;
-	}*/
-
-	/*
-	for(int j = 1 ; j < 10 ; j++)
-	{
-		int size = j;
-		int *a = new int[size];
-		for(int i = 0 ; i < size ; i++)
-			a[i] = 2 * i + 1;
-
-		int S = 0;
-		int F = 0;
-		for(int i = 0 ; i <= size * 2 ; i++)
-		{
-			fibSearch(a, i, 0, size, (i & 1 ? &S : &F));
-		}
-		std::cout << "总成功查找长度" << S << std::endl;
-		std::cout << "总失败查找长度" << F << std::endl;
-		std::cout << "失败减成功 " << F - S << std::endl;
-	}*/
-
 	int size = 100;
 	int *a = generateArray(size);
 	quickSort(a, 0, size);
@@ -152,6 +122,85 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::cout << "二分B 总成功查找长度为" << sum2 << std::endl;
 	std::cout << "fibo 总成功查找长度为" << sum3 << std::endl;
 	std::cout << "插值 总成功查找长度为" << sum4 << std::endl;
+}
+
+void testSearchLength()
+{
+	for(int j = 1 ; j < 10 ; j++)
+	{
+		int size = j;
+		int *a = new int[size];
+		for(int i = 0 ; i < size ; i++)
+			a[i] = 2 * i + 1;
+
+		int S = 0;
+		int F = 0;
+		for(int i = 0 ; i <= size * 2 ; i++)
+		{
+			fibSearch(a, i, 0, size, (i & 1 ? &S : &F));
+		}
+		std::cout << "总成功查找长度" << S << std::endl;
+		std::cout << "总失败查找长度" << F << std::endl;
+		std::cout << "失败减成功 " << F - S << std::endl;
+	}
+	
+}
+
+void testBubbleSort()
+{
+	srand(time(0));
+	int size = rand() % 20;
+
+	int *a = generateArray(size);
+	Vector<int> myv = Vector<int>(a, size);
+	myv.bubbleSort(0, myv.size());
+}
+
+void testMerge()
+{
+	srand(time(0));
+	int size = rand() % 20;
+
+	int *a = generateArray(size);
+	Vector<int> myv = Vector<int>(a, size);
+	myv.mergeSort(0, myv.size());
+	myv.print();
+
+}
+
+void testBitmap()
+{
+	Bitmap m = Bitmap(8);
+	m.set(0);
+	m.set(5);
+	m.clear(5);
+	m.set(5);
+	std::cout << m.test(5) << std::endl;
+	
+}
+
+void testEratosthenes()
+{
+	for(int i = 2 ; i < 100 ; i ++)
+		Eratosthenes(i);
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	/*const int a[] = {8, 1, 4, 2, 3, 5, 6, 7};
+	Vector<int> myvector = Vector<int>(a, 8);
+	myvector.mergeSort(0, myvector.size());
+	myvector.print();*/
+	/*int size = 5;
+	int a[] = {1, 3, 5, 7, 5};
+	for(int i = 0 ; i <= size << 1 ; i++)
+	{
+		std::cout << "数字为" << i << std::endl;
+		std::cout << binS(a, size, i) << std::endl;
+	}*/
+
+	testEratosthenes();
+
 	return 0;
 }
 

@@ -609,6 +609,33 @@ void Vector<T>::mergeSort(Rank lo, Rank hi)
 	}
 }
 
+template<typename T>
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
+{
+	T *B = new T[mi - lo];
+	T *C = _elem + mi;
+	Rank left = 0, right = 0;
+	Rank leftb = mi - lo, rightb = hi - mi;
+	for(Rank i = 0 ; i < leftb ; i ++)
+		B[i] = _elem[i + lo];
+	Rank p = lo;
+	while(left < leftb)
+	{
+		if(right < rightb)
+		{
+			//注意稳定性
+			if(B[left] <= C[right])
+				_elem[p++] = B[left++];
+			else
+				_elem[p++] = C[right++];
+		}
+		else 
+		{
+			_elem[p++] = B[left++];
+		}
+	}
+}
+/*
 //学会用指针加法
 //只需要B用辅助空间，然后可以把某个数组为空，另一个不为空这个特殊情况也写在for循环里
 template<typename T>
@@ -627,3 +654,4 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
 	}
 	delete[] B;
 }
+*/
