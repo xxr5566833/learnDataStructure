@@ -38,6 +38,7 @@ public:
 	Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0)//容量为c，规模为s，所有元素初始为v
 	{
 		//约定s <= c，内部还是数组
+		_capacity = c;
 		_elem = new T[_capacity];
 		/*
 		for(_size = 0 ; _size < s ; _size++)
@@ -286,7 +287,7 @@ struct Increase
 	}
 };
 template<typename T>
-void increase(Vector<T> &T)
+void increase(Vector<T> &V)
 {
 	V.traverse(Increase<T>());
 }
@@ -655,3 +656,33 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
 	delete[] B;
 }
 */
+
+//选择排序
+template<typename T>
+void Vector<T>::selectionSort(Rank lo, Rank hi)
+{
+	for(int i = hi - 1 ; i > lo ; i--)
+	{
+		int mx;
+		//这里max一定要返回值最大的最末尾的元素
+		if((mx = max(lo, hi)) != i)
+		{
+			T temp = _elem[i];
+			_elem[i] = _elem[mx];
+			_elem[mx] = temp;
+		}
+	}
+}
+
+template<typename T>
+int Vector<T>::max(Rank lo, Rank hi)
+{
+	int mx = lo;
+	for(int i = lo + 1 ; i < hi ; i++)
+	{
+		//这里我顺序扫描所以为了保证稳定性这里用了>=
+		if(_elem[i] >= _elem[mx])
+			mx = i;
+	}
+	return mx;
+}

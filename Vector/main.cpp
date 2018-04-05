@@ -3,6 +3,9 @@
 
 #include "stdafx.h"
 #include "Vector.h"
+#include "Stack.h"
+#include "List.h"
+#include <vector>
 #include "Bitmap.h"
 #include <stdint.h>
 unsigned long int next = 1;
@@ -74,7 +77,7 @@ void quickSort(T *a, int lo, int hi)
 		int sel = rand() % (hi - lo) + lo;
 		T key = a[sel];
 		a[sel] = a[hi - 1];
-
+		//注意范围是lo和hi ，所以i和j的初始化值由lo确定
 		int i = lo - 1;
 		int j = lo;
 		while(j < hi - 1)
@@ -185,22 +188,29 @@ void testEratosthenes()
 		Eratosthenes(i);
 }
 
+
+void testList()
+{
+	int a[] = {6, 5};
+	List<int> l = List<int>(a, 2);
+	l.reverse();
+	print(l);
+}
+
+void testConvert()
+{
+	Vector<char> l;
+	Stack<char> s;
+	convert(s, 16, 8);
+	while(!s.empty())
+	{
+		std::cout << s.pop() << " ";
+	}
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	/*const int a[] = {8, 1, 4, 2, 3, 5, 6, 7};
-	Vector<int> myvector = Vector<int>(a, 8);
-	myvector.mergeSort(0, myvector.size());
-	myvector.print();*/
-	/*int size = 5;
-	int a[] = {1, 3, 5, 7, 5};
-	for(int i = 0 ; i <= size << 1 ; i++)
-	{
-		std::cout << "数字为" << i << std::endl;
-		std::cout << binS(a, size, i) << std::endl;
-	}*/
-
-	testEratosthenes();
-
+	testConvert();
 	return 0;
 }
 
