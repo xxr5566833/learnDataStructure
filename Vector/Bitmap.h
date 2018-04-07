@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 void Eratosthenes(int n);
 //使用char实现的bitmap类

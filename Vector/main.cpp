@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "Stack.h"
 #include "List.h"
+#include "Queen.h"
 #include <vector>
 #include "Bitmap.h"
 #include <stdint.h>
@@ -208,9 +209,35 @@ void testConvert()
 	}
 }
 
+void testStackPermute()
+{
+	int size = 4;
+	int B[] = {1, 4, 2, 3};
+	bool result  = checkStackPermu(B, 4);
+	std::cout << result << std::endl;
+}
+
+void testEvaluate()
+{
+	char *RPN = new char[100];
+	//保存下开始地址
+	char *s = RPN;
+	char *input = new char[100];
+	std::cin >> input;
+	double result = evaluate(input, RPN);
+	std::cout << "最后结果为 " << (double)result << std::endl;
+	std::cout << "逆波兰表达式为" << s << std::endl;
+
+}
+
+void testQueen()
+{
+	placeQueens(6);
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testConvert();
+	testQueen();
 	return 0;
 }
 
