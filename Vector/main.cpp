@@ -6,6 +6,7 @@
 #include "Stack.h"
 #include "List.h"
 #include "Queen.h"
+#include "Queue.h"
 #include <vector>
 #include "Bitmap.h"
 #include <stdint.h>
@@ -223,6 +224,8 @@ void testEvaluate()
 	//保存下开始地址
 	char *s = RPN;
 	char *input = new char[100];
+	for(int i = 0 ; i < 100 ; i++)
+		input[i] = 0;
 	std::cin >> input;
 	double result = evaluate(input, RPN);
 	std::cout << "最后结果为 " << (double)result << std::endl;
@@ -232,12 +235,54 @@ void testEvaluate()
 
 void testQueen()
 {
-	placeQueens(6);
+	placeQueens(8);
 }
+
+void testQueue()
+{
+	Queue<int> q;
+	q.enqueue(10);
+	q.enqueue(9);
+	q.enqueue(8);
+	q.dequeue();
+	std::cout << q.front() << std::endl;
+}
+
+void testReadNumber()
+{
+	char *num = new char[100];
+	for(int i = 0 ; i < 100 ; i++)
+		num[i] = 0;
+	std::cin >> num;
+	Stack<double> s;
+	readNumber(num, s);
+	std::cout << s.top() << std::endl;
+}
+
+void testFindAnswer()
+{
+	for(int i = 0 ; i < 100 ; i++)
+	{
+		std::cout << "和为" << i << std::endl;
+		findAnswer(i);
+	}
+}
+
+void testDelete()
+{
+	int *a = new int[4];
+	for(int i = 0 ; i < 4 ; i++)
+		a[i] = i;
+	delete[] a;
+	for(int i = 0 ; i < 4 ; i++)
+		std::cout << a[i] << std::endl;
+	//这就说明delete之后，a中的元素的值会改变
+}
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testQueen();
+	testFindAnswer();
 	return 0;
 }
 

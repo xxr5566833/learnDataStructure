@@ -2,7 +2,7 @@
 #include "Vector.h"
 #include "stdafx.h"
 
-//stack.cpp里的函数声明
+//测试用的声明
 double evaluate(char* S, char *& RPN);
 
 template <typename T>
@@ -23,6 +23,8 @@ public:
 		return _elem[size() - 1];
 	}
 };
+
+void readNumber(char *&p, Stack<double> &opndstack);
 
 //有明确的算法， 但是解答以线性序列的形式给出，其次无论是递归还是迭代实现，序列都是逆序计算输出，然后输入和输出的规模不确定，难以事先确定所需的容量大小
 //这一类问题就可以用栈
@@ -97,6 +99,11 @@ bool checkStackPermu(T *B, int n)
 }
 
 //括号匹配算法
+
+//在只有一种括号时，只需要保证一下两个原则即可保证整个表达式合法
+//1. 在表达式任意前缀中，左括号数量都大于等于右括号数量
+//2.整个表达式的左右括号数量相等，
+//所以在只有一种括号时，完全可以用一个数字来记录左右括号数目之差，如果这个数目能在扫描过程中一直保持大于等于0，且最后等于0，那么说明这个表达式的括号合法
 
 //递归实现
 //删除exp[lo,hi]不含括号的最长前缀，后缀
@@ -208,6 +215,8 @@ int privilege[9][9] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1,
 	2, 2, 2, 2, 2, 2, 2, -1, 1,
 };
+
+
 //已知当前指针指向一个数字的开始，这个方法把这个数字转化为float并放入操作数栈中，同时移动S指针
 //同时为了方便处理，这个方法也要把数字字符数组给加到最后的波兰后缀字符串里
 void readNumber(char *&S, Stack<double> &opndstack, char *&RPN)
@@ -228,6 +237,33 @@ void readNumber(char *&S, Stack<double> &opndstack, char *&RPN)
 	RPN++;
 
 	opndstack.push(atof(num));
+}
+
+//上面的readNumber是通过atof实现的，下面自己手写课后题4-6自己实现一个readNumber
+//语义：将起始为p的数字字串解析为double，并存入stack操作数栈中
+void readNumber(char *&p, Stack<double> &opndstack)
+{
+	double result = 0;
+	while(*p >= '0' && *p <= '9')
+	{
+		result = result *10.0 + (*p - '0');
+		p++;
+	}
+	if(*p == '.')
+	{
+		p++;
+		//那么还需要处理小数位
+		double tail = 0;
+		double fraction = 0.1;
+		while(*p >= '0' && *p <= '9')
+		{
+			tail = tail + (*p - '0') * fraction;
+			fraction /= 10;
+			p++;
+		}
+		result += tail;
+	}
+	opndstack.push(result);
 }
 
 void append(char *&RPN, double );
@@ -373,4 +409,87 @@ double rpnEvaluate(char *rpn)
 {
 	//这里不写了，就是遇到数字就入栈，遇到运算符就把相应的操作数出栈，然后计算并重新压入操作数栈，此时不需要运算符栈了
 	return 0;
+}
+
+//习题4-18费马-拉格朗日定理
+//对于任意一个自然数n，找出所有费马-拉格朗日的解并输出
+void findAnswer(int n);
+
+void findAnswer(int n)
+{
+	//answer表示已经有的前k个数字
+	Stack<int> answer;
+	int count = 0;
+	answer.push(0);
+	while(1)
+	{	
+		int sum = 0;
+		for(int i = 0 ; i < answer.size() ; i++)
+		{
+			int s = answer[i];
+			sum += answer[i] * answer[i];
+		}
+		if(answer.size() < 4)
+		{
+			//现在数字还不够
+			if(sum <= n)
+			{
+				//和也没达到要求，sum <= n，那么把当前栈顶的这个数字加入到解答栈中，因为要遵循四个数字非减的次序，所以直接把栈顶元素再次入栈
+				//注意answer.top返回的是一个引用，这里不要直接把top()继续入栈，这就相当于一个元素重复入栈，而这四个元素应该是互相独立的，所以这里加0让它形成一个新的变量
+				//如果直接把top()入栈，那么在某次vector扩容时，会delete掉之前的数组_elem，即_elem的原来的元素都失效了，
+				//而push是调用了insert，top获得的是最后一个元素的引用，所以如果在某次调用push(top())时，top()的元素，即原来_elem的最后一个元素失效了
+				//那么之后insert的可能是一个错误的元素值
+				answer.push( answer.top() + 0);
+			}
+			else{
+				//数字不够，但是sum>n ，这说明，接下来再加数字一定还是sum >n ，那么我们必须要撤出数字
+				//说明栈顶元素这个位置上的数字已经没有解了，此时我们必须要把栈顶元素pop，然后把之后的栈顶元素加1，表示下一次搜索
+				//如果栈规模只有一个，那么说明搜索到了仅仅一个元素的平方就比n大，那么没有搜索的必要了，break
+				if(answer.size() == 1)
+				{
+					break;
+				}
+				else{
+					answer.pop();
+					answer.top() += 1;
+				}
+			}
+		}
+		else{
+			//数字已经足够了，那么看当前的sum
+			if(sum < n)
+			{
+				//和比n小，那么很简单最后一个数字继续搜索
+				answer.top() += 1;
+			}
+			else if(sum == n)
+			{
+				//找到了一个解！
+				std::cout << "第" << count++ << "个解:" << std::endl;
+				for(int i = 0 ; i < answer.size() ; i++)
+				{
+					std::cout << answer[i] << " " ;
+				}
+				std::cout << std::endl;
+				//找到解以后，如果再增加最后一个数，那么最后sum一定会大于n，故这里还是需要回溯
+				answer.pop();
+				answer.top() += 1;
+			}
+			else{
+				//sum比n大了，那么此时再增加最后一个元素没有意义，所以就回溯
+				answer.pop();
+				answer.top() += 1;
+			}
+		}
+	}
+}
+
+//暂且约定按照自然优先级，并且不使用括号，考察在数字0-9之间加入 + * 后构成的合法算数表达式
+//编写一个程序，对于任意一个给定的整数S，给出所有值为S的表达式
+//利用以及写好的表达式求值，我们最重要的任务是枚举出所有的可能的表达式和数字的组合情况
+//对于一个数字序列，我们可以选择一个切分点，这个切分点上放上操作符，
+//对于被切分的两个序列， 我们可以获得他们可能的所有情况以及对应的值
+void getExpression(int S)
+{
+	
 }

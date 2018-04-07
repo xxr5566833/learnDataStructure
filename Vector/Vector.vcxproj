@@ -76,11 +76,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="Cell.h" />
     <ClInclude Include="fib.h" />
     <ClInclude Include="Leetcode.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="ListNode.h" />
     <ClInclude Include="Queen.h" />
+    <ClInclude Include="Queue.h" />
     <ClInclude Include="selfAdjustingList.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="stdafx.h" />

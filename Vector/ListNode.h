@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 
 typedef int Rank;
@@ -29,11 +30,13 @@ struct ListNode
 	//-----------之后插入新节点
 	ListNodePosi(T) insertAsSucc(T const &e);
 };
-
+//一开始一直有一个C2953错误，说我类模板重复定义，但是我就是这一个listnode啊？
+//找了半天原因终于想到我这个头文件可能被重复定义了！果然，加了#pragma once就好了
 template <typename T>
 ListNodePosi(T) ListNode<T>:: insertAsPred(T const &e)
 {
 	ListNodePosi(T) p = new ListNode(e, pred, this);
+
 	pred->succ = p;
 	this->pred = p;
 	return p;

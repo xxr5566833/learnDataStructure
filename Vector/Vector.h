@@ -155,6 +155,7 @@ void Vector<T>::expand()
 		//T为基本类型，或者已经重载=
 		_elem[i] = oldElem[i];
 	delete[] oldElem;
+	
 	//_size 没变
 }
 

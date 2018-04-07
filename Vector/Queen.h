@@ -74,6 +74,11 @@ void placeQueens(int N)
 					std::cout << solu[i].x << " " << std::endl;
 				}
 				std::cout << std::endl;
+				//一直不理解，为什么这里在找到解以后没有做任何的操作，最后输出却没有重复输出？
+				//原来是检验冲突的那个循环里，q当时还是最后一行的元素，而且它也被加入到了栈中，所以q和它自己冲突了，但是为了保证不会二义性，
+				//这里还是处理一下
+				q = solu.pop();
+				q.x += 1;
 			}
 			else{
 				Queen n = Queen(0, q.y + 1);
