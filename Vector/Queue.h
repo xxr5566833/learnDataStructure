@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "List.h"
+#include "Stack.h"
 #include "ListNode.h"
 template <typename T>
 class Queue:public List<T>{
@@ -17,7 +18,7 @@ public:
 	{
 		return first()->data;
 	}
-
+	void reverse();
 };
 
 //银行服务模拟
@@ -75,3 +76,20 @@ void simulate(int nWin, int servTime)
 	delete[] windows;
 }
 
+//队列元素倒置
+	//很可怕，不能在函数定义中使用模板，那辅助栈的类型如何与队列类型保持？
+	//所以这里默认为int吧
+//虽然是继承，但是这里还是需要在queue类里声明一下！
+template <typename T>
+void Queue<T>::reverse()
+{
+	Stack<int> s;
+	while(!empty())
+	{
+		s.push(dequeue());
+	}
+	while(!s.empty())
+	{
+		enqueue(s.pop());
+	}
+}

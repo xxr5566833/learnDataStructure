@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector.h"
+#include "Queue.h"
 #include "stdafx.h"
 
 //测试用的声明
@@ -22,6 +23,7 @@ public:
 	{
 		return _elem[size() - 1];
 	}
+	void reverse();
 };
 
 void readNumber(char *&p, Stack<double> &opndstack);
@@ -492,4 +494,15 @@ void findAnswer(int n)
 void getExpression(int S)
 {
 	
+}
+
+//栈的reverse
+template <typename T>
+void Stack<T>::reverse()
+{
+	Queue<int> q;
+	while(!empty())
+		q.enqueue(pop());
+	while(!q.empty())
+		push(q.dequeue());
 }

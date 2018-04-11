@@ -75,8 +75,11 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinNode.h" />
+    <ClInclude Include="BinTree.h" />
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Cell.h" />
+    <ClInclude Include="Deque.h" />
     <ClInclude Include="fib.h" />
     <ClInclude Include="Leetcode.h" />
     <ClInclude Include="List.h" />

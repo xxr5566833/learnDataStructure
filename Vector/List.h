@@ -403,6 +403,7 @@ ListNodePosi(T) List<T>::selectMax(ListNodePosi(T) p, int n)
 	return max;
 }
 //归并排序
+//归并排序可以理解为两个有序队列之间的排序，因为归并排序的过程中，只需要用到①front()即取出两个队列的头元素进行比较②dequeue()取出较小的头元素③enqueue()加入到结果队列中
 template<typename T>
 void List<T>::merge(ListNodePosi(T) &p, int n, List<T> &L, ListNodePosi(T) q, int m)
 {

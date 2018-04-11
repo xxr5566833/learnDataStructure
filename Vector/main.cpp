@@ -6,10 +6,13 @@
 #include "Stack.h"
 #include "List.h"
 #include "Queen.h"
+#include "Deque.h"
 #include "Queue.h"
 #include <vector>
 #include "Bitmap.h"
 #include <stdint.h>
+#include "BinNode.h"
+#include "BinTree.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -279,10 +282,31 @@ void testDelete()
 	//这就说明delete之后，a中的元素的值会改变
 }
 
+void testQueueReverse()
+{
+
+	Queue<int> q = Queue<int>();
+	for(int i = 0 ; i < 10 ; i++)
+		q.enqueue(i);
+	print(q);
+	q.reverse();
+	print(q);
+
+}
+
+void testStackReverse()
+{
+	Stack<int> s;
+	for(int i = 0 ; i < 10 ; i++)
+		s.push(i);
+	s.print();
+	s.reverse();
+	s.print();
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testFindAnswer();
+	testStackReverse();
 	return 0;
 }
 

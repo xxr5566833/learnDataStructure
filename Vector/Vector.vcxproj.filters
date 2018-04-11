@@ -57,6 +57,15 @@
     <ClInclude Include="Queue.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Deque.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BinNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BinTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
