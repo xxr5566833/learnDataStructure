@@ -8,11 +8,14 @@
 #include "Queen.h"
 #include "Deque.h"
 #include "Queue.h"
+#include "BinTree.h"
 #include <vector>
 #include "Bitmap.h"
 #include <stdint.h>
 #include "BinNode.h"
 #include "BinTree.h"
+
+#include "Skiplist.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -193,7 +196,6 @@ void testEratosthenes()
 		Eratosthenes(i);
 }
 
-
 void testList()
 {
 	int a[] = {6, 5};
@@ -304,9 +306,65 @@ void testStackReverse()
 	s.print();
 }
 
+
+template<typename T>
+void testBinTrav()
+{
+	BinTree<int> tree;
+	tree.insertAsRoot(11);
+
+	BinTree<int> subtree5;
+	subtree5.insertAsRoot(5);
+	subtree5.insertAsLC(subtree5.root(), 3);
+	subtree5.insertAsRC(subtree5.root(), 4);
+
+	BinTree<int> subtree7;
+	subtree7.insertAsRoot(7);
+	//这里注意，attachAsLC的第二个参数是指针的引用，但是你不能直接对比如subtree7取地址，因为你取完地址后得到的值被存在一个临时变量中，而&只会对一个左表达式（有固定地址的）求值
+	//所以这里我们需要把指针先付给一个新的变量，然后用这个变量作为参数
+	BinTree<int> *s5 = &subtree5;
+	subtree7.attachAsLC(subtree7.root(), s5);
+	subtree7.insertAsRC(subtree7.root(), 6);
+
+	BinTree<int> subtree2;
+	subtree2.insertAsRoot(2);
+	subtree2.insertAsRC(subtree2.root(), 1);
+
+	BinTree<int> subtree8;
+	subtree8.insertAsRoot(8);
+	BinTree<int> *s2 = &subtree2;
+	BinTree<int> *s7 = &subtree7;
+	subtree8.attachAsLC(subtree8.root(), s2);
+	subtree8.attachAsRC(subtree8.root(), s7);
+
+	BinTree<int> subtree9;
+	subtree9.insertAsRoot(9);
+	BinTree<int> *s8 = &subtree8;
+	subtree9.attachAsRC(subtree9.root(), s8);
+	
+	BinTree<int> *s9 = &subtree9;
+	tree.attachAsLC(tree.root(), s9);
+	tree.insertAsRC(tree.root(), 10);
+	
+	tree.travLevel(Print<T>());
+
+}
+
+void testQuadlist()
+{
+	Skiplist<int, int> qlist;
+	QuadlistNode<Entry<int, int>> n;
+	for(int i = 0 ; i < 10 ; i ++)
+	{
+		qlist.put(10 - i, 1);
+	}
+	qlist.remove(10);
+
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testStackReverse();
+	testQuadlist();
 	return 0;
 }
 

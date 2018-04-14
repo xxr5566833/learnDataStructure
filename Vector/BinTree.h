@@ -91,12 +91,15 @@ public:
 	}
 };
 
+
 //实现
 //更新高度
 template<typename T>
 int BinTree<T>::updateHeight(BinNodePosi(T) x)
 {
-	return x->height = 1 + max(stature(x->lc), stature(x->rc));
+	int heightlc = stature(x->lc);
+	int heightrc = stature(x->rc);
+	return x->height = 1 + heightlc > heightrc ? heightlc : heightrc;
 }
 
 template<typename T>
@@ -114,7 +117,8 @@ template<typename T>
 BinNodePosi(T) BinTree<T>::insertAsRoot(T const &e)
 {
 	_size = 1;
-	_root = new BinNode(e);
+	return _root = new BinNode<T>(e);
+
 }
 
 template<typename T>
@@ -152,9 +156,9 @@ BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T> *&S)
 	
 	//释放原树的步骤：
 	S->_root = NULL;
-	S->size = 0;
+	S->_size = 0;
 	//release()怎么实现？
-	release(S);
+	//为什么查了以后没有发现什么关于release的消息。。
 	S = NULL;
 	//返回接入位置
 	return x;
@@ -163,12 +167,13 @@ BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T> *&S)
 template<typename T>
 BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T> *&S)
 {
-	if(x->rc == S->_root)	x->rc->parent = x;
+	//既要把x的右孩子赋为S的root，又要判断这个root是不是为NULL
+	if(x->rc = S->_root)	x->rc->parent = x;
 	_size += S->_size;
 	updateHeightAbove(x);
 	S->_root = NULL;
 	S->_size = 0;
-	release(S);
+	//所以这里先不管release
 	S = NULL;
 	return x;
 }
@@ -191,8 +196,6 @@ static int removeAt(BinNodePosi(T) x)
 {
 	if(!x)	return 0;
 	int n = 1 + removeAt(x->lc) + removeAt(x->rc);
-	release(x->data);
-	release(x);
 	return n;
 }
 
@@ -311,5 +314,184 @@ static void goAlongLeftBranch(BinNodePosi(T) x, Stack<BinNodePosi(T)>  &s)
 		//沿着最左通路，记录沿途各个根节点
 		s.push(x);
 		x = x->lc;
+	}
+}
+
+template<typename T, typename VST>
+void travIn_I1(BinNodePosi(T) x, VST &visit)
+{
+	Stack<BinNodePosi(T)> s;
+	while(!s.empty() || x)
+	{
+		//中序遍历就是对于每一个节点，先沿最左通路保存要遍历的节点，然后取出最左通路的最末节点，访问它，并遍历它的右子树
+		goAlongLeftBranch(x, s);
+		
+		x = s.pop();
+		visit(x->data);
+		x = x->rc;
+	}
+}
+
+//遍历为二叉树的各个节点赋予了一个次序，于是一旦指定了遍历策略，就可以与向量和列表一样，为二叉树的节点之间定义前驱与后继关系
+template<typename T>
+BinNodePosi(T) BinNode<T>::succ()
+{
+	BinNodePosi(T) s = this;
+	if(s->rc)
+	{
+		s = s->rc;
+		while(HasLChild(*s))
+		{
+			s = s->lc;
+		}
+	}
+	//这里使用宏定义
+	while(IsRChild(*s))
+	{
+		s = s->parent;
+	}
+	s = s->parent;
+	//当没有后继时，返回NULL
+	return s;
+}
+
+//中序遍历迭代版#2
+//这个版本就是把版本#1的while循环里的那个while循环给拆开由外面的while控制了
+template<typename T, typename VST>
+void travIn_I2(BinNodePosi(T) x, VST &visit)
+{
+	Stack<BinNodePosi(T)> S;
+	while(true)
+	{
+		if(x)
+		{
+			S.push(x);
+			x = x->lc;
+		}
+		else if(!S.empty())
+		{
+			x = S.pop();
+			visit(x->data);
+			x = x->rc;
+		}else
+			break;
+	}
+}
+
+//中序遍历版本#3，这个思路就是利用一个标志位表示是否刚从右子树处回溯
+template<typename T, typename VST>
+void travIn_I3(BinNodePosi(T) x, VST &visit)
+{
+	//这里不适用栈，那么怎么保证可以获得下一次遍历的根节点呢？
+	//就是用succ的思想，不管怎样，下一次一定是遍历后继节点
+	bool backtrack = false;
+	while(true)
+	{
+		if(!backtrack && HasLChild(*x))
+		{
+			x = x->lc;
+		}
+		else{
+			//是从左子树回溯来的或者是没有左子树
+			//这里的思路和我之前的“把左子树遍历完以后设置其左子树为空”是一个道理，但是我们不能改变其树的结构，所以用backtrack来表示
+			//此时x一定要表示为遍历完的左子树的父亲节点
+			visit(x->data);
+			if(HasRChild(*x))
+			{
+				x = x->rc;
+				//这里开始，输出根节点，然后遍历其右子树，所以需要把backtrack关闭
+				//如果不关闭，那么在第一次回溯后，所有的子树都无法遍历其左子树
+				backtrack = false;
+			}
+			else{
+				//这里需要获得x的后继，因为当前一定是某一左子树被遍历完毕，原来是用栈记录的，现在使用succ方法来获得
+				if(!(x = x->succ()))	break;
+				//backtrack被设置说明当前栈顶元素的左子树已经被遍历完毕，也就是左孩子节点的右子树被遍历完毕
+				backtrack = true;
+			}
+		}
+
+	}
+}
+
+
+//后序遍历
+
+//这里没有理解好这个函数的作用
+//后序遍历也可以和前两个一样，有确定的遍历顺序，所以这个方法不光是要遍历到后序遍历的第一个节点
+//最重要的还是要用栈来确定这棵子树的后序遍历顺序
+template<typename T>
+
+static void gotoHLVFL(Stack<BinNodePosi(T)> &s)
+{
+	//自顶向下，反复检查栈顶节点
+	//这个循环结束的条件是x为NULL，此时只能说明x是某个节点的右子节点=》x的父亲节点既没有左孩子也没有右孩子=》x的父亲节点即为我们要找的这个子树的后序遍历的第一个节点
+	while(BinNodePosi(T) x = s.top())
+	{
+		if(x->lc)
+		{
+			//有左孩子
+			//此时注意要先把右孩子入栈（如果有的话），因为后序遍历的过程中，右子树是优先于根节点遍历的
+			if(x->rc)	s.push(x->rc);
+			s.push(x->lc);
+		}
+		else
+		{
+			//没左孩子，那么才向右
+			s.push(x->rc);
+		}
+	}
+	//把栈顶的NULL弹出
+	s.pop();
+}
+
+
+template<typename T, typename VST>
+void travPost_I(BinNodePosi(T) x, VST &visit)
+{
+	Stack<BinNodePosi(T)> s;
+	//这里要注意检查x
+	if(x)
+		s.push(x);
+	while(!s.empty())
+	{
+		//如果栈顶元素和刚出战的元素是父子关系，那么只能说明栈顶元素所在的子树已被遍历完，栈顶元素该出栈
+		//否则，栈顶元素一定是刚出栈的元素的右兄弟，此时应该遍历这个栈顶元素所在的子树
+		//除了一个特例，就是一开始x是根节点，此时x和栈顶的元素是一样的。自然不满足栈顶元素是x的父亲节点这个关系，所以需要遍历
+		if(s.top() != x->parent)
+		{
+			//表明此时应该开始遍历这个子树，并确定节点的遍历顺序
+			gotoHLVFL(s);
+		}
+		x = s.pop();
+		visit(x->data);
+	}
+}
+
+//总结一下，前序遍历就是沿着最左通路自上而下访问根节点，直到某个根节点没有左孩子，然后自下而上以同样方式遍历每个根节点的右子树
+//中序遍历就是先沿着最左通路到达那个没有左孩子的最左子节点，然后自下而上的沿着最左通路先遍历根节点，再遍历右子树
+//后序遍历就是从根节点开始，先找到最高左侧可见叶子节点，然后按照栈的存储顺序，对每一个节点看是打印还是遍历其右子树
+
+
+//最后是层次遍历，应该写在BinNode的实现里的
+template <typename T>
+template<typename VST>
+void BinNode<T>::travLevel(VST &visit)
+{
+	//二叉树层次遍历算法
+	Queue<BinNodePosi(T)> q;
+	q.enqueue(this);
+	while(!q.empty())
+	{
+		BinNodePosi(T) x = q.dequeue();
+		if(HasLChild(*x))
+		{
+			q.enqueue(x->lc);
+		}
+		if(HasRChild(*x))
+		{
+			q.enqueue(x->rc);
+		}
+		visit(x->data);
 	}
 }

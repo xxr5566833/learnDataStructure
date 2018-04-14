@@ -249,6 +249,7 @@ void postorderWalk()
 		else{
 			//说明now是栈顶结点的右子节点
 			bTree *q = now;
+			
 			while(top && q == p->right)
 			{
 				//这里要不断的取出已经遍历完的子树的根节点

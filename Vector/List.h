@@ -44,6 +44,7 @@ public:
 	//重载，支持循秩访问
 	T &operator[](Rank r)const;
 	//首节点位置
+	//这里first可能返回tailer
 	ListNodePosi(T) first() const {return header->succ;}
 	//末节点位置
 	ListNodePosi(T) last() const {return tailer->pred;}

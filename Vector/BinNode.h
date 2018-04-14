@@ -15,8 +15,9 @@ typedef enum {RB_RED, RB_BLACK}	RBColor;
 
 */
 #define IsRoot(x) ((x).parent == NULL)
-#define IsLChild(x)	(!IsRoot(x) && (& (x).parent->lc == (x)))
-#define IsRChild(x) (!IsRoot(x) && (& (x).parent->rc == (x)))
+//一开始还他娘的以为这个&是表示与操作，，，真是天真可笑
+#define IsLChild(x)	(!IsRoot(x) && ((x).parent->lc == &(x)))
+#define IsRChild(x) (!IsRoot(x) && ((x).parent->rc == &(x)))
 #define HasParent(x)	((x).parent != NULL)
 #define HasLChild(x)	((x).lc != NULL)
 #define HasRChild(x)	((x).rc != NULL)
@@ -34,7 +35,9 @@ typedef enum {RB_RED, RB_BLACK}	RBColor;
 
 #define uncle(x)	(sibling((x)->parent))
 //来自父亲的引用
-#define FromParentTo(x)	(IsRoot(x) ? _root : (IsLChild(x) ? (x)->parent->lc : (x)->parent->rc))
+#define FromParentTo(x)	(IsRoot(x) ? _root : (IsLChild(x) ? (x).parent->lc : (x).parent->rc))
+
+//突然感觉宏定义其实不太好用啊，不如inline
 
 
 

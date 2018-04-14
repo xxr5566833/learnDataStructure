@@ -500,7 +500,7 @@ void getExpression(int S)
 template <typename T>
 void Stack<T>::reverse()
 {
-	Queue<int> q;
+	Queue<T> q;
 	while(!empty())
 		q.enqueue(pop());
 	while(!q.empty())

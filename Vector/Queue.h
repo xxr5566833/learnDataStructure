@@ -83,7 +83,8 @@ void simulate(int nWin, int servTime)
 template <typename T>
 void Queue<T>::reverse()
 {
-	Stack<int> s;
+	//这里使用T即可！
+	Stack<T> s;
 	while(!empty())
 	{
 		s.push(dequeue());
