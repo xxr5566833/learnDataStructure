@@ -83,10 +83,14 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="Entry.h" />
     <ClInclude Include="fib.h" />
+    <ClInclude Include="HashTable.h" />
+    <ClInclude Include="Huff.h" />
+    <ClInclude Include="HuffChar.h" />
     <ClInclude Include="Leetcode.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="ListNode.h" />
     <ClInclude Include="PFC.h" />
+    <ClInclude Include="prime.h" />
     <ClInclude Include="Quadlist.h" />
     <ClInclude Include="QuadlistNode.h" />
     <ClInclude Include="Queen.h" />

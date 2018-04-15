@@ -16,8 +16,35 @@
     <Filter Include="头文件\Entry">
       <UniqueIdentifier>{1122c8d6-d1cc-4c51-a690-455452ec53a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Quadlist">
+    <Filter Include="头文件\PFC">
+      <UniqueIdentifier>{107bf44b-195b-4ebc-9844-2eee9108d522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\BinTree">
+      <UniqueIdentifier>{67ade058-6e11-4345-927f-19e1d6893ecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Bitmap">
+      <UniqueIdentifier>{ae76a07c-fe56-4209-8f33-204a2a651c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Queen">
+      <UniqueIdentifier>{f1ea8cf2-cb56-454f-bfc6-054da23dbe8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Queue">
+      <UniqueIdentifier>{957698ce-7de6-4c32-8a17-ac855e0ca810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\SkipList">
+      <UniqueIdentifier>{fd99d355-2ab3-44a4-80f6-fbb415f82945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\SkipList\Quadlist">
       <UniqueIdentifier>{8f3af95d-6c91-4487-8225-072fd0057d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Vector">
+      <UniqueIdentifier>{b3e419e3-f9cf-4e6b-9579-ca821d8bb2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Huff">
+      <UniqueIdentifier>{c16bd766-60a3-4e2d-812c-b7ac666dd718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\HashTable">
+      <UniqueIdentifier>{1ffe00eb-7f94-416f-aa80-1230c0077016}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,13 +57,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="fib.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Bitmap.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ListNode.h">
@@ -54,41 +75,59 @@
     <ClInclude Include="Stack.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Queen.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Cell.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Queue.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Deque.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="BinNode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="BinTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PFC.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Dictionary.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Skiplist.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Entry.h">
       <Filter>头文件\Entry</Filter>
     </ClInclude>
     <ClInclude Include="QuadlistNode.h">
-      <Filter>头文件\Quadlist</Filter>
+      <Filter>头文件\SkipList\Quadlist</Filter>
     </ClInclude>
     <ClInclude Include="Quadlist.h">
-      <Filter>头文件\Quadlist</Filter>
+      <Filter>头文件\SkipList\Quadlist</Filter>
+    </ClInclude>
+    <ClInclude Include="PFC.h">
+      <Filter>头文件\PFC</Filter>
+    </ClInclude>
+    <ClInclude Include="BinTree.h">
+      <Filter>头文件\BinTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BinNode.h">
+      <Filter>头文件\BinTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>头文件\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Queen.h">
+      <Filter>头文件\Queen</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.h">
+      <Filter>头文件\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="Skiplist.h">
+      <Filter>头文件\SkipList</Filter>
+    </ClInclude>
+    <ClInclude Include="Deque.h">
+      <Filter>头文件\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>头文件\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffChar.h">
+      <Filter>头文件\Huff</Filter>
+    </ClInclude>
+    <ClInclude Include="Huff.h">
+      <Filter>头文件\Huff</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>头文件\HashTable</Filter>
+    </ClInclude>
+    <ClInclude Include="prime.h">
+      <Filter>头文件\Bitmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

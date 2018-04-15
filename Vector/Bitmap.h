@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-void Eratosthenes(int n);
+
 //使用char实现的bitmap类
 class Bitmap{
 private:
@@ -93,28 +93,6 @@ public:
 	}
 };
 
-void Eratosthenes(int n)
-{
-	Bitmap  m = Bitmap(n);
-	for(int i = 2 ; i * i <= n ; i++)
-	{
-		//对于素数才需要设置它的倍数的标志位，如果已经被设置标志位，那么不需要遍历了！
-		if(!m.test(i))
-		{
-			//这里j完全可以从i 开始
-			for(int j = i ; i * j <= n ; j += 1)
-			{
-				m.set(i * j);
-			}
-		}
-	}
-	for(int i = 2 ; i <= n ; i++)
-	{
-		if(!m.test(i))
-			std::cout << i << " ";
-	}
-	std::cout << std::endl;
-}
 
 //使用两个vector实现的bitmap
 typedef int Rank;

@@ -11,11 +11,13 @@
 #include "BinTree.h"
 #include <vector>
 #include "Bitmap.h"
+#include "prime.h"
 #include <stdint.h>
 #include "BinNode.h"
 #include "BinTree.h"
 
 #include "Skiplist.h"
+#include "PFC.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -362,9 +364,28 @@ void testQuadlist()
 
 }
 
+void testPFC()
+{
+	const int size = 20;
+	char *old = new char[size];
+	for(int i = 0 ; i < size ; i++)
+		old[i] = 0;
+	std::cin >> old;
+	//1.生成编码树
+	PFCForest *forest = initForest();
+	PFCTree *tree = generateTree(forest);
+	//根据编码树生成编码表
+	PFCTable *table = generateTable(tree);
+
+	//根据编码表进行编码操作，并不是直接通过编码树编码，因为生成编码表后不用重复搜索了
+	Bitmap map = Bitmap();
+	int n = encode(table, map, old);
+	decode(tree, map, n);
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testQuadlist();
+	testPFC();
 	return 0;
 }
 

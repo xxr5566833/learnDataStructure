@@ -31,11 +31,11 @@ struct Entry
 	{
 		return key != e.key;
 	}
-	//定义友元函数，这里需要再加一个K， V，保证与上面的K， V区分开
+	/*//定义友元函数，这里需要再加一个K， V，保证与上面的K， V区分开
 	template<typename K, typename V>
 	friend std::ostream &operator<<(std::ostream &out, Entry<K, V> &obj)
 	{
 		return  out << "(" << obj.key << "," << obj.value << ")" << std::endl;
-	}
+	}*/
 };
 //缺少;在template前面，注意就该在它的头文件里面找
