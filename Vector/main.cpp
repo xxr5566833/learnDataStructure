@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include "BinNode.h"
 #include "BinTree.h"
-
+#include "HashTable.h"
 #include "Skiplist.h"
 #include "PFC.h"
 unsigned long int next = 1;
@@ -308,6 +308,18 @@ void testStackReverse()
 	s.print();
 }
 
+void testHashTable()
+{
+	HashTable<int, int> t = HashTable<int, int>(10);
+	for(int i = 0 ; i < 100 ; i += 11)
+	{
+		t.put(i, i + 2);
+	}
+	t.put(230, 10);
+	t.remove(11);
+	t.get(11);
+	
+}
 
 template<typename T>
 void testBinTrav()
@@ -385,7 +397,7 @@ void testPFC()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testPFC();
+	testHashTable();
 	return 0;
 }
 

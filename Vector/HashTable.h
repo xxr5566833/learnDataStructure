@@ -2,18 +2,15 @@
 #include "Dictionary.h"
 #include "Bitmap.h"
 #include "prime.h"
+#include "Entry.h"
 #include "stdafx.h"
-template<typename K, typename, T>
+template<typename K, typename V>
 class HashTable:public Dictionary<K, V>
 {
 private:
-	//桶数组，存放词条的指针
 	Entry<K, V> **ht;
-	//桶数组容量
 	int M;
-	//词条容量
 	int N;
-	//懒惰删除标记
 	Bitmap *lazyRemoval;
 #define lazilyRemoved(x) (lazyRemoval->test(x))
 #define markAsRemoved(x) (lazyRemoval->set(x))
@@ -88,7 +85,7 @@ template<typename K, typename V>
 int HashTable<K, V>::probe4Hit(const K& k)
 {
 	int r = hashCode(k) % M;
-	while((ht[r] && (k != ht[r]->key)) || (!ht[r] && lazyRemoved(r)))
+	while((ht[r] && (k != ht[r]->key)) || (!ht[r] && lazilyRemoved(r)))
 		r = (r + 1) % M;
 	return r;
 }
@@ -113,7 +110,7 @@ template<typename K, typename V>
 bool HashTable<K, V>::put(K k, V v)
 {
 	if(ht[probe4Hit(k)])	return false;
-	//success only if load factor is controlled properly
+
 	int r = probe4Free(k);
 	ht[r] = new Entry<K, V>(k ,v);
 	++N;
@@ -129,3 +126,58 @@ int HashTable<K, V>::probe4Free(const K& k)
 		r = (r + 1) % M;
 	return r;
 }
+
+/*
+* 重散列算法：装填因子过大时，采用“逐一取出再插入”的朴素策略，对桶数组扩容
+* 不可简单地通过memcpy将原桶数组复制到新桶数组（比如前端），否则存在两个问题：
+* 1.会继承原有冲突；2.可能导致查找链在后端断裂——即使为所有扩充桶设置懒惰删除标志也无济于事
+*/
+
+template<typename K, typename V>
+void HashTable<K, V>::rehash()
+{
+	int old_capacity = M;
+	Entry<K, V> **old_ht = ht;
+	M = Eratosthenes(2 * M);
+	N = 0;
+	ht = new Entry<K, V>*[M];
+	memset(ht, 0, sizeof(Entry<K, V>*) * M);
+	delete lazyRemoval;
+	lazyRemoval = new Bitmap(M);
+	for(int i = 0 ; i < old_capacity ; i++)
+	{
+		if(old_ht[i])
+		{
+			put(old_ht[i]->key, old_ht[i]->value);
+		}
+	}
+	delete[] old_ht;
+}
+
+static size_t hashCode(char c)
+{
+	return (size_t)c;
+}
+
+static size_t hashCode(int k)
+{
+	return (size_t) k;
+}
+
+static size_t hashCode(long long i)
+{
+	return (size_t) ((i >> 32) + (int) i);
+}
+//生成字符串的循环移位散列码
+static size_t hashCode(char s[])
+{
+	int h = 0;
+	for(size_t n = strlen(s), i = 0 ; i < n ; i++)
+	{
+		h = (h << 5) | (h >> 27);
+		h += (int)s[i];
+	}
+	return (size_t) h;
+}
+
+//循环左移五位是实验统计得出的最佳值
