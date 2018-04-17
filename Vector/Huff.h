@@ -108,7 +108,7 @@ HuffTable *generateTable(HuffTree *tree)
 int encode(HuffTable *table, Bitmap *codeString, char *s)
 {
 	int n = 0;
-	for(int m = strlen(s), int i = 0 ; i < m ; i ++)
+	for(int m = strlen(s), i = 0 ; i < m ; i ++)
 	{
 		char **pCharCode = table->get(s[i]);
 		if(!pCharCode)
@@ -131,7 +131,7 @@ void decode(HuffTree *tree, Bitmap *code, int n)
 	for(int i = 0 ; i < n ; i++)
 	{
 		//注意先按照当前编码，确定x的下一个位置，然后判断x是不是叶子节点
-		x = code->test(i) ? x->lc : x->rc;
+		x = code->test(i) ? x->rc : x->lc;
 		if(IsLeaf(*x))
 		{
 			printf("%c", x->data.ch);

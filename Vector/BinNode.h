@@ -71,6 +71,7 @@ struct BinNode{
 	BinNodePosi(T) insertAsRC(T const &);
 	//取当前节点的直接后继（是指之前写的有序二叉树的直接后继吗？）
 	BinNodePosi(T) succ();
+	BinNodePosi(T) pred();
 	//子树层次遍历
 	template<typename VST>	void travLevel(VST &);
 	//前序遍历

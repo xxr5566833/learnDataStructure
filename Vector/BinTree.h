@@ -107,7 +107,9 @@ void BinTree<T>::updateHeightAbove(BinNodePosi(T) x)
 {
 	while(x)
 	{
-		updateHeight(x);
+		//如果高度没有发生变化，那么不需要继续向上更新
+		if(x->height == updateHeight(x))
+			break;
 		x = x->parent;
 	}
 }
@@ -332,6 +334,25 @@ void travIn_I1(BinNodePosi(T) x, VST &visit)
 	}
 }
 
+template<typename T>
+BinNodePosi(T) BinNode<T>::pred()
+{
+	BinNodePosi(T) p = this;
+	if(p->lc)
+	{
+		p = p->lc;
+		while(p->rc)
+			p = p->rc;
+	}
+	else{
+		while(IsLChild(p))
+		{
+			p = p->parent;
+		}
+		p = p->parent;
+	}
+	return p;
+}
 //遍历为二叉树的各个节点赋予了一个次序，于是一旦指定了遍历策略，就可以与向量和列表一样，为二叉树的节点之间定义前驱与后继关系
 template<typename T>
 BinNodePosi(T) BinNode<T>::succ()
@@ -413,6 +434,35 @@ void travIn_I3(BinNodePosi(T) x, VST &visit)
 
 	}
 }
+
+//不仅无需辅助栈，也无需辅助标志位
+//就是利用succ方法，但是这里不是每个节点都调用succ获得它的下一个节点，而是在当前节点没有右子节点时调用succ
+///如果当前节点有右子节点，那么还是找到这个右子树的最左子节点（也是succ的其中一种情况），这个逻辑在while中实现了
+//那不如直接所有节点都调用succ？
+template<typename T, typename VST>
+void travIn_I4(BinNodePosi(T) x, VST &visit)
+{
+	while(true)
+	{
+		if(HasLChild(*x))
+		{
+			x = x->lc;
+		}
+		else{
+			//此时x没有左孩子
+			visit(x->data);
+			while(!HasRChild(*x))
+			{
+				if(x = x->succ())	
+					return ;
+				else
+					visit(x->data);
+			}
+			x = x->rc;
+		}
+	}
+}
+
 
 
 //后序遍历

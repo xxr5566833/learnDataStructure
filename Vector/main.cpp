@@ -16,8 +16,8 @@
 #include "BinNode.h"
 #include "BinTree.h"
 #include "HashTable.h"
+#include "Huff.h"
 #include "Skiplist.h"
-#include "PFC.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -375,7 +375,7 @@ void testQuadlist()
 	qlist.remove(10);
 
 }
-
+/*#include "PFC.h"
 void testPFC()
 {
 	const int size = 20;
@@ -393,11 +393,32 @@ void testPFC()
 	Bitmap map = Bitmap();
 	int n = encode(table, map, old);
 	decode(tree, map, n);
-}
+}*/
 
+
+void testHuffCode()
+{
+	//统计字符频率
+	int *freq = statistics("test.txt");
+	//初始化森林
+	HuffForest *forest = initForest(freq);
+	//生成huffman树
+	HuffTree *tree = generateTree(forest);
+	//根据huffman树生成编码表
+	HuffTable *table = generateTable(tree);
+	Bitmap *map = new Bitmap;
+	char *s = new char[100];
+	for(int i = 0 ;  i< 100 ; i++)
+		s[i] = 0;
+	std::cin >> s;
+	int n = encode(table, map, s);
+	char *code = map->bits2string(n);
+	decode(tree, map, n);
+
+}
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testHashTable();
+	testHuffCode();
 	return 0;
 }
 
