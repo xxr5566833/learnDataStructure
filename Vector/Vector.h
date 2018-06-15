@@ -10,7 +10,7 @@ static Rank exponentialSearch(T *a, T const &e, Rank lo, Rank hi);
 template <typename T>
 static int interpolationSearch(T *a, T const &e, int lo, int hi, int *sum);
 template<typename T>
-static Rank binSearchB(T *A, T const &e, Rank lo, Rank hi, int *sum);
+static Rank binSearchB(T *A, T const &e, Rank lo, Rank hi, int *sum );
 template<typename T>
 
 class Vector
@@ -35,6 +35,7 @@ public:
 	void quickSort(Rank lo, Rank hi);		//快速排序算法
 	void heapSort(Rank lo, Rank hi);		//堆排序
 public:
+
 	Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0)//容量为c，规模为s，所有元素初始为v
 	{
 		//约定s <= c，内部还是数组
@@ -116,6 +117,7 @@ void Vector<T>::print()
 //这里以数组[lo, hi)为蓝本
 template<typename T>
 
+
 void Vector<T>::copyFrom(T const *A, Rank lo, Rank hi)
 {
 	//初始一般capacity是 hi - lo的两倍
@@ -127,10 +129,12 @@ void Vector<T>::copyFrom(T const *A, Rank lo, Rank hi)
 	//如果_elem有某一前缀与A后缀重叠，那么此时应该从A的最后往前复制，如果从开始往最后复制，那么A的后缀会被覆盖
 	//综上，从可能被覆盖的地方开始复制
 	_elem = new T[_capacity = 2 * (hi - lo)];
+	//真的发现人的思维是固定的，过了很长时间又写这个方法还是用for循环复制数组
 	for(_size = 0 ; _size < hi - lo ; _elem[_size++] = A[lo + _size]);
 }
 
 template<typename T>
+
 Vector<T> & Vector<T>::operator=(Vector<T> const &V)
 {
 	if(_elem)	delete[] _elem;
@@ -143,6 +147,7 @@ template<typename T>
 //insert一开始都要调用这个算法
 //2-1 分摊更具有参考价值，分摊和平均没有蕴含关系
 //O(1)分摊时间
+
 void Vector<T>::expand()
 {
 	//没满不扩，满了彩扩
@@ -150,6 +155,7 @@ void Vector<T>::expand()
 	//问题：不低于最小容量？_capacity低于最小容量不可能发生啊？shrink里也不会发生啊
 	if(_capacity < DEFAULT_CAPACITY) _capacity = DEFAULT_CAPACITY;	//不低于最小容量
 	T *oldElem = _elem;
+	//这里注意乘2用移位！！！！！！！
 	_elem = new T[_capacity <<= 1];	//容量加倍
 	for(int i = 0 ; i < _size ; i++)
 		//T为基本类型，或者已经重载=
@@ -176,6 +182,7 @@ void Vector<T>::shrink()
 }
 
 template<typename T>
+
 //get set都被取代了，返回的是引用，所以get，set都会被取代
 T& Vector<T>::operator[](Rank k)const
 {
@@ -210,6 +217,8 @@ template<typename T> static bool equal(T *a, T *b)	{return equal(*a, *b);}
 template<typename T> static bool equal(T &a, T &b)	{return a == b;}
 
 template<typename T>
+
+
 //统一约定返回其中秩最大者
 //查找与e相等的元素，约定[lo, hi)
 //规模相同，内部组成不同的输入，渐进运行时间却有本质区别，这类算法也叫输入敏感的算法
@@ -334,37 +343,6 @@ int Vector<T>:: disordered()const
 }
 
 //有序向量重复元素剔除算法
-/*
-template<typename T>
-int Vector<T>::uniquify()
-{
-	int oldSize = _size;
-	int i = 1;
-	while(i < _size)
-		_elem[i - 1] == _elem[i] ? remove(i) : i++;
-	return oldSize - _size;
-}
-*/
-/*
-//删除可以使用区间删除，我的思路是使用remove删除一个区间，但是书上更好
-template<typename T>
-int Vector<T>::uniquify()
-{
-	int oldSize = _size;
-	int i = 0;
-	while(i < _size)
-	{
-		int lo  = i + 1;
-		int hi = lo;
-		while(hi < _size && _elem[hi] == _elem[i])
-			hi++;
-		if(hi > lo)
-			remove(lo, hi);
-		i++;
-	}
-	return oldSize - _size;
-}
-*/
 	//书上的思路，就是在原数组上删除即可，把数组分成三部分，
 	//前半部分是已经确定没有相同元素的
 	//中间部分是一些相同的可以丢弃的元素
@@ -458,6 +436,7 @@ static Rank fibSearch(T *A, T const &e, Rank lo, Rank hi, int *sum)
 
 //二分查找：版本B，左右都只做一次元素比较即可
 template<typename T>
+
 static Rank binSearchB(T *A, T const &e, Rank lo, Rank hi, int *sum)
 {
 	int count = 0;
@@ -572,6 +551,10 @@ static int interpolationSearch(T *a, T const &e, int lo, int hi, int *sum)
 
 //时间关系，我先写好最终版的
 template<typename T>
+
+
+
+
 void Vector<T>::bubbleSort(Rank lo, Rank hi)
 {
 	while(lo < (hi = bubble(lo, hi)))
@@ -600,18 +583,22 @@ Rank Vector<T>::bubble(Rank lo, Rank hi)
 
 //二路归并排序的实现
 template<typename T>
+
 void Vector<T>::mergeSort(Rank lo, Rank hi)
 {
-	if(hi - lo > 1)
+	if(lo < hi - 1)
 	{
-		Rank mi = (lo + hi) >> 1;
+		int mi = (lo + hi) >> 1;
 		mergeSort(lo, mi);
 		mergeSort(mi, hi);
 		merge(lo, mi, hi);
 	}
 }
 
+
 template<typename T>
+
+
 void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
 {
 	T *B = new T[mi - lo];

@@ -46,6 +46,9 @@
     <Filter Include="头文件\HashTable">
       <UniqueIdentifier>{1ffe00eb-7f94-416f-aa80-1230c0077016}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Graph">
+      <UniqueIdentifier>{105d0e91-7157-4fa1-a8d0-44a996bd7a52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -128,6 +131,12 @@
     </ClInclude>
     <ClInclude Include="prime.h">
       <Filter>头文件\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>头文件\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphMatrix.h">
+      <Filter>头文件\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

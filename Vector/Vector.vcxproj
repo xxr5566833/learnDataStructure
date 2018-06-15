@@ -83,6 +83,8 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="Entry.h" />
     <ClInclude Include="fib.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="GraphMatrix.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Huff.h" />
     <ClInclude Include="HuffChar.h" />

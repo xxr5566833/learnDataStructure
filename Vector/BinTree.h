@@ -89,17 +89,24 @@ public:
 	{
 		return _root && t._root && (_root == t._root);
 	}
+
+	void swapIter(BinNodePosi(T) x);
+	void swapRecu(BinNodePosi(T) x);
+
+	bool valueLessSumIter(BinNodePosi(T) x);
+	bool valueLessSumRecu(BinNodePosi(T) x);
 };
 
 
 //实现
 //更新高度
+
 template<typename T>
 int BinTree<T>::updateHeight(BinNodePosi(T) x)
 {
 	int heightlc = stature(x->lc);
 	int heightrc = stature(x->rc);
-	return x->height = 1 + heightlc > heightrc ? heightlc : heightrc;
+	return x->height = 1 + (heightlc > heightrc ? heightlc : heightrc);
 }
 
 template<typename T>
@@ -118,21 +125,23 @@ void BinTree<T>::updateHeightAbove(BinNodePosi(T) x)
 template<typename T>
 BinNodePosi(T) BinTree<T>::insertAsRoot(T const &e)
 {
+	//错误：注意对_size的维护
 	_size = 1;
 	return _root = new BinNode<T>(e);
 
 }
+
 
 template<typename T>
 BinNodePosi(T) BinTree<T>::insertAsLC(BinNodePosi(T) x, T const &e)
 {
 	_size ++;
 	x->insertAsLC(e);
-	//注意这里来维护高度
+	//错误：注意这里来维护高度
 	updateHeightAbove(x);
+	//错误：这里需要返回新加入的节点
 	return x->lc;
 }
-
 template<typename T>
 BinNodePosi(T) BinTree<T>::insertAsRC(BinNodePosi(T) x, T const &e)
 {
@@ -193,11 +202,13 @@ int BinTree<T>::remove(BinNodePosi(T) x)
 	return n;
 }
 
+//递归释放每个节点的空间，并返回该节点为根节点的子树的节点数
 template<typename T>
 static int removeAt(BinNodePosi(T) x)
 {
 	if(!x)	return 0;
 	int n = 1 + removeAt(x->lc) + removeAt(x->rc);
+	delete x;
 	return n;
 }
 
@@ -255,6 +266,7 @@ void travPost_R(BinNodePosi(T) x, VST &visit)
 
 //先序遍历迭代版#1，这个版本和我一开始的先序遍历的思路一样
 //尾递归优化：尾递归是指函数的最后一步是调用函数自身，那么此时在再一次调用这个函数时，不需要保存上一个函数的信息
+
 template<typename T, typename VST>
 void travPre_I1(BinNodePosi(T) x, VST& visit)
 {
@@ -273,6 +285,7 @@ void travPre_I1(BinNodePosi(T) x, VST& visit)
 //先序遍历迭代版#2，这个版本也是之前很熟悉的思路
 //先沿最左通路自顶向下访问沿途节点，然后再自底向上依次以同样的方式遍历这些节点的右子树
 //preorder(T) = visit(L0), visit(L1)... visit(Ld),preorder(Rd), preorder(R d-1)...preorder(R0)
+
 template<typename T, typename VST>
 static void visitAlongLeftBranch(BinNodePosi(T) x, VST &visit, Stack<BinNodePosi(T)> &S)
 {
@@ -314,6 +327,9 @@ static void goAlongLeftBranch(BinNodePosi(T) x, Stack<BinNodePosi(T)>  &s)
 	while(x)
 	{
 		//沿着最左通路，记录沿途各个根节点
+		//后来再一次写这个程序的时候，把中序遍历和后序混了，
+		//中序遍历是先根节点，然后是右子树，然后才是上上一层的根节点和右子树
+		//所以在沿着最左通路走时，只需要把根节点压栈即可，之后拿出来visit后，直接设置为其右子树即可
 		s.push(x);
 		x = x->lc;
 	}
@@ -345,7 +361,7 @@ BinNodePosi(T) BinNode<T>::pred()
 			p = p->rc;
 	}
 	else{
-		while(IsLChild(p))
+		while(IsLChild(*p))
 		{
 			p = p->parent;
 		}
@@ -354,6 +370,7 @@ BinNodePosi(T) BinNode<T>::pred()
 	return p;
 }
 //遍历为二叉树的各个节点赋予了一个次序，于是一旦指定了遍历策略，就可以与向量和列表一样，为二叉树的节点之间定义前驱与后继关系
+
 template<typename T>
 BinNodePosi(T) BinNode<T>::succ()
 {
@@ -365,6 +382,7 @@ BinNodePosi(T) BinNode<T>::succ()
 		{
 			s = s->lc;
 		}
+		return s;
 	}
 	//这里使用宏定义
 	while(IsRChild(*s))
@@ -543,5 +561,255 @@ void BinNode<T>::travLevel(VST &visit)
 			q.enqueue(x->rc);
 		}
 		visit(x->data);
+	}
+}
+
+//swap 交换二叉树的每一个节点的左右孩子
+template <typename T>
+void BinTree<T>::swapRecu(BinNodePosi(T) x)
+{
+	//这里采用先序遍历
+	if(x)
+	{
+		BinNodePosi(T) temp = x->lc;
+		x->lc = x->rc;
+		x->rc = temp;
+		if(x->rc)
+			swapRecu(x->rc);
+		if(x->lc)
+			swapRecu(x->lc);
+	}
+
+}
+
+template <typename T>
+void BinTree<T>::swapIter(BinNodePosi(T) x)
+{
+	//迭代版，这里我觉得可能需要使用层次遍历了
+	//这里只需要能遍历每一个节点就ok了，不需要管遍历的次序
+	//这里就用先序遍历
+	Stack<BinNodePosi(T)> s;
+	while(true)
+	{
+		//原来是线序遍历写错了
+		if(x)
+		{
+			
+			if(x->rc)
+				s.push(x->rc);
+			BinNodePosi(T) p = x;
+			x = x->lc;
+			BinNodePosi(T) temp = p->lc;
+			p->lc = p->rc;
+			p->rc = temp;
+		}
+		else{
+			if(s.empty())
+				break;
+			x = s.pop();
+		}
+	}
+}
+
+//判断一棵树是否所有节点的数值均不小于其真祖先的数值总和
+bool valueNotLessSum(BinNode<int> *n, int sum)
+{
+	if(n->data < sum)
+		return false;
+	bool result = true;
+	if(n->lc)
+	{
+		result = result && valueNotLessSum(n->lc, sum + n->data);
+	}
+	if(n->rc)
+	{
+		result = result && valueNotLessSum(n->rc, sum + n->data);
+	}
+	return result;
+}
+
+bool valueNotLessSum(BinNode<int> *n)
+{
+	//sum表示当前n节点的所有真祖先的权值之和
+	int sum = 0;
+	Stack<BinNode<int> *> s;
+	if(n)	
+		s.push(n);
+	while(!s.empty())
+	{
+		//按照后序遍历思路，先左再右再父亲节点
+		if(n->parent != s.top())
+		{
+			//说明n是左子节点，s.top()是其兄弟节点
+			while(s.top())
+			{
+				//这里我们需要遍历这个右子树
+				n = s.top();
+				if(n->lc)
+				{
+					if(n->rc)
+						s.push(n->rc);
+					s.push(n->lc);
+					sum += n->data;
+					n = n->lc;	
+				}
+				else{
+					if(n->rc)
+					{
+						s.push(n->rc);
+						sum += n->data;
+					}
+					else{
+						break;
+					}
+				}
+			}
+		}
+		else{
+			//如果上一次节点n与当前栈顶是父亲关系，那么此时应该把sum减去栈顶元素的data
+			//如果是兄弟关系，那么sum不变
+			sum -= s.top()->data;	
+		}
+		n = s.pop();
+		if(n->data < sum)
+			return false;
+		//此时说明n已经被检查过了，接下来应该把sum换成它的真祖父的权值和
+		return true;
+	}
+}
+
+//5-25
+//设计并实现一个递归算法，在O(n)时间内将每个节点的数值替换为其后代中的最大数值
+void exchangeDataUseMax(BinNode<int> *n, int *max)
+{
+	//这里要使用后序遍历，因为必须知道子节点的信息才能确定父节点的信息
+	if(n)
+	{
+		int lmax, rmax;
+		exchangeDataUseMax(n->lc, &lmax);
+		exchangeDataUseMax(n->rc, &rmax);
+		//先调用获得其真后代的最大值
+		//然后更新max
+		*max = lmax > rmax ? lmax : rmax;
+		*max = (*max) > n->data ? *max : n->data;
+		n->data = *max;
+	}
+	else{
+		//对于null节点，返回最小int（因为这里类型是int）
+		*max = 0x80000000;
+	}
+	
+}
+//迭代版：
+void exchangeDataUseMax(BinNode<int> *n)
+{
+	Stack<BinNode<int> *> s;
+	//我需要一个max栈来记录每一个节点的后代的max
+	Stack<int> max;
+	//当前节点的真后代的max
+	int realmax = 0;
+	if(n)
+		s.push(n);
+	while(!s.empty())
+	{
+		if(n->parent != s.top())
+		{
+			while(true)
+			{
+				n = s.top();
+				if(n->lc)
+				{
+					if(n->rc)
+						s.push(n->rc);
+					s.push(n->lc);
+					n = n->lc;
+				}
+				else{
+					if(n->rc)
+					{
+						s.push(n->rc);
+					}
+					else
+					{
+						//这里作为上面递归的递归基，把max更新一下
+						realmax = 0x80000000;
+						break;
+					}
+				}
+			}
+		}
+		else{
+			//此时栈顶是n的父亲节点，那么需要更新n的父亲的真后代的max
+			if(s.top()->lc && s.top()->rc)
+			{
+				//那么从max栈中弹出两个，一定分别为左右子树的max，求出最大的max
+				int rmax = max.pop();
+				int lmax = max.pop();
+				realmax = rmax > lmax ? rmax : lmax;
+			}
+			else
+			{
+				realmax = max.pop();
+			}
+		}
+		
+		n = s.pop();
+		if(realmax < n->data)
+			realmax = n->data;
+		else
+			n->data = realmax;
+		//把当前节点后代的最大值push到栈里，供当前节点的父亲节点使用
+		max.push(realmax);
+	}
+	
+}
+
+//把树中每个节点的data域设置为按照其层次遍历的顺序的编号
+//父亲节点是k，那么左子节点是2k+1,右子节点是2k+2
+//首先是递归
+void setData(BinNode<int> *n, int k)
+{
+	if(n)
+	{
+		if(n->parent)
+		{
+			if(IsLChild(*n))
+			{
+				n->data = 2 * k + 1;
+			}
+			else{
+				n->data = 2 * k + 2;
+			}
+		}
+		else{
+			n->data = 0;
+		}
+		setData(n->lc, n->data);
+		setData(n->rc, n->data);
+	}
+}
+//迭代版的设置顺序编号
+//各种遍历都可实现吧，但是用层次遍历最好是完全二叉树，普通的二叉树用层次遍历我觉得实现起来有点麻烦
+void setData(BinNode<int> *n)
+{
+	//这里使用先序遍历
+	Stack<BinNode<int> *> s;
+	while(true)
+	{
+		while(n)
+		{
+			s.push(n->rc);
+			if(n->parent)
+			{
+				n->data = (IsLChild(*n)) ? 2 * n->parent->data + 1 : 2 * n->parent->data + 2;
+			} 
+			else
+				n->data = 0;
+			n = n->lc;
+
+		}
+		if(s.empty())
+			break;
+		n = s.pop();
 	}
 }

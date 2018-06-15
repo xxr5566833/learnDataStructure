@@ -18,6 +18,8 @@
 #include "HashTable.h"
 #include "Huff.h"
 #include "Skiplist.h"
+#include "Graph.h"
+#include "GraphMatrix.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -76,8 +78,10 @@ int *generateArray(int size)
 }
 
 template <typename T>
+
 void quickSort(T *a, int lo, int hi)
 {
+	//快排和归并有些互逆的味道，快排是先分再分别排，归并是先分别排然后合并
 	//重写了一遍快排，竟然有这么多问题TVT
 	if(lo < hi - 1)
 	{
@@ -325,42 +329,45 @@ template<typename T>
 void testBinTrav()
 {
 	BinTree<int> tree;
-	tree.insertAsRoot(11);
+	tree.insertAsRoot(1);
 
 	BinTree<int> subtree5;
-	subtree5.insertAsRoot(5);
-	subtree5.insertAsLC(subtree5.root(), 3);
-	subtree5.insertAsRC(subtree5.root(), 4);
+	subtree5.insertAsRoot(16);
+	subtree5.insertAsLC(subtree5.root(), 32);
+	subtree5.insertAsRC(subtree5.root(), 32);
 
 	BinTree<int> subtree7;
-	subtree7.insertAsRoot(7);
+	subtree7.insertAsRoot(8);
 	//这里注意，attachAsLC的第二个参数是指针的引用，但是你不能直接对比如subtree7取地址，因为你取完地址后得到的值被存在一个临时变量中，而&只会对一个左表达式（有固定地址的）求值
 	//所以这里我们需要把指针先付给一个新的变量，然后用这个变量作为参数
 	BinTree<int> *s5 = &subtree5;
 	subtree7.attachAsLC(subtree7.root(), s5);
-	subtree7.insertAsRC(subtree7.root(), 6);
+	subtree7.insertAsRC(subtree7.root(), 16);
 
 	BinTree<int> subtree2;
-	subtree2.insertAsRoot(2);
-	subtree2.insertAsRC(subtree2.root(), 1);
+	subtree2.insertAsRoot(8);
+	subtree2.insertAsRC(subtree2.root(), 16);
 
 	BinTree<int> subtree8;
-	subtree8.insertAsRoot(8);
+	subtree8.insertAsRoot(4);
 	BinTree<int> *s2 = &subtree2;
 	BinTree<int> *s7 = &subtree7;
 	subtree8.attachAsLC(subtree8.root(), s2);
 	subtree8.attachAsRC(subtree8.root(), s7);
 
 	BinTree<int> subtree9;
-	subtree9.insertAsRoot(9);
+	subtree9.insertAsRoot(2);
 	BinTree<int> *s8 = &subtree8;
 	subtree9.attachAsRC(subtree9.root(), s8);
 	
 	BinTree<int> *s9 = &subtree9;
 	tree.attachAsLC(tree.root(), s9);
-	tree.insertAsRC(tree.root(), 10);
+	tree.insertAsRC(tree.root(), 2);
 	
-	tree.travLevel(Print<T>());
+	//bool result = valueNotLessSum(tree.root());
+	//setData(tree.root());
+	travIn_I3(tree.root(), Print<int>());
+	//tree.travIn(Print<int>());
 
 }
 
@@ -416,9 +423,87 @@ void testHuffCode()
 	decode(tree, map, n);
 
 }
+void testBinSB()
+{
+	int a[7] = {1, 2, 3, 4, 5, 6};
+	int b = 0;
+	binSearchB(a, 1, 0, 7, &b);
+}
+
+void testBfs()
+{
+	//图在书的161页
+	char vlist[] = "ABCDEFGS";
+	GraphMatrix<char, int> g;
+	for(int i = 0 ; i < 8 ; i++)
+	{
+		g.insert(vlist[i]);
+	}
+	//插入边
+	g.insert(0, 0, 7, 0);
+	g.insert(0, 0, 7, 3);
+	g.insert(0, 0, 7, 2);
+	g.insert(0, 0, 0, 2);
+	g.insert(0, 0, 0, 4);
+	g.insert(0, 0, 2, 1);
+	g.insert(0, 0, 3, 1);
+	g.insert(0, 0, 4, 5);
+	g.insert(0, 0, 4, 6);
+	g.insert(0, 0, 6, 5);
+	g.insert(0, 0, 6, 1);
+	g.bfs(7);
+}
+
+void testDfs()
+{
+	//图在书的163页
+	char vlist[] = "ABCDEFG";
+	GraphMatrix<char, int> g;
+	for(int i = 0 ; i < 7 ; i++)
+	{
+		g.insert(vlist[i]);
+	}
+	//插入边
+	g.insert(0, 0, 0, 1);
+	g.insert(0, 0, 0, 5);
+	g.insert(0, 0, 0, 2);
+	g.insert(0, 0, 1, 2);
+	g.insert(0, 0, 3, 0);
+	g.insert(0, 0, 3, 4);
+	g.insert(0, 0, 4, 5);
+	g.insert(0, 0, 5, 6);
+	g.insert(0, 0, 6, 0);
+	g.insert(0, 0, 6, 2);
+	
+	g.dfs(0);
+}
+
+void testTsort()
+{
+	//图在书的168页
+	char vlist[] = "ABCDEF";
+	GraphMatrix<char, int> g;
+	for(int i = 0 ; i < 6 ; i++)
+	{
+		g.insert(vlist[i]);
+	}
+	//插入边
+	g.insert(0, 0, 0, 2);
+	g.insert(0, 0, 0, 3);
+	g.insert(0, 0, 1, 2);
+	g.insert(0, 0, 2, 3);
+	g.insert(0, 0, 2, 4);
+	g.insert(0, 0, 2, 5);
+	g.insert(0, 0, 4, 5);
+	
+	Stack<char> *s = g.tSort(0);
+	while(!s->empty())
+		std::cout<< s->pop() << std::endl;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testHuffCode();
+	testTsort();
 	return 0;
 }
 
