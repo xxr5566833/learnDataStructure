@@ -469,6 +469,7 @@ void del(bTree *node)
 		transplant(node, node->left);
 	}
 	else{
+		//在看了邓老师的数据结构后，这里其实不需要transplant，直接类似于链表那样，既然实质是交换两个节点，那么直接交换这两个节点的数据项即可！
 		//只有它的后继可以继承它的位置，后继一定在右子树中，后继一定是没有左子节点的,且后继如果不是node的右子节点，那么后继一定是某个父亲的左子节点!
 		bTree *success = successor(node);
 		bTree *successright = success->right;

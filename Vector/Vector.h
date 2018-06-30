@@ -81,7 +81,7 @@ public:
 	Rank find(T const& e)const {return find(e, 0, _size);}	//无序向量整体查找
 	Rank find(T const& e, Rank lo, Rank hi)const;			//无序向量区间查找
 	Rank search(T const& e)const			//有序向量整体查找
-	{return (size <= 0 ? -1 : search(e, 0, _size));}
+	{return (_size <= 0 ? -1 : search(e, 0, _size));}
 	Rank search(T const &e, Rank lo, Rank hi)const;		//有序向量区间查找
 	
 	//可写访问接口
@@ -366,8 +366,18 @@ int Vector<T>::uniquify()
 template<typename T>
 Rank Vector<T>::search(T const &e, Rank lo, Rank hi)const
 {
-	return (rand() % 2) ?
-		binSearch(_elem, e, lo, hi) : fibSearch(_elem, e, lo, hi);
+	return binSearch(_elem, e, lo, hi) ;
+}
+template<typename T>
+static Rank binSearch(T *A, T const &e, Rank lo, Rank hi)
+{
+	while(lo < hi)
+	{
+		Rank mi = (lo + hi) >> 1;
+		if(e < A[mi])	hi = mi;
+		else	lo = mi + 1;
+	}
+	return lo - 1;
 }
 
 //有序向量的二分查找：左1右2命中2

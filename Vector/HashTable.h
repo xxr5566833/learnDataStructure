@@ -116,6 +116,7 @@ bool HashTable<K, V>::put(K k, V v)
 	++N;
 	if(N * 2 > M)
 		rehash();
+	return true;
 }
 
 template<typename K, typename V>

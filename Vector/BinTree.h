@@ -676,6 +676,7 @@ bool valueNotLessSum(BinNode<int> *n)
 		//此时说明n已经被检查过了，接下来应该把sum换成它的真祖父的权值和
 		return true;
 	}
+	return false;
 }
 
 //5-25

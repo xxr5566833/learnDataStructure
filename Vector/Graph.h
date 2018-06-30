@@ -75,29 +75,29 @@ public:
 	template<typename PU>	void pfs(int, PU);	//优先级搜索框架
 
 };
-
 template<typename Tv, typename Te>
 void Graph<Tv, Te>::bfs(int s)
 {
+	
 	reset();
 	int v = s;int clock = 0;
 	do{
 		if(status(v) == UNDISCOVERED)
 			BFS(v, clock);
 	}while(s != (v = (++v) % n));
+	std::cout << "bfs遍历结束" << std::endl;
 }
 
 template<typename Tv, typename Te>
 void Graph<Tv, Te>::BFS(int v, int& clock)
 {
 	Queue<int> Q;
+	//注意这里设置第一个顶点是discovered
 	status(v) = DISCOVERED;
 	Q.enqueue(v);
 	while(!Q.empty())
 	{
 		int v = Q.dequeue();
-		//访问该顶点
-		std::cout << vertex(v) << std::endl;
 		dTime(v) = ++clock;
 		for(int u = firstNbr(v) ; u > -1 ; u = nextNbr(v, u))
 		{
@@ -113,9 +113,14 @@ void Graph<Tv, Te>::BFS(int v, int& clock)
 		}
 		//当所有邻居都加入到队列中后，v被设置为visited
 		status(v) = VISITED;
+		std::cout << vertex(v) << std::endl;
 	}
+	
 }
+
+
 template<typename Tv, typename Te>
+
 void Graph<Tv, Te>::dfs(int s)
 {
 	reset();
@@ -270,3 +275,116 @@ void Graph<Tv, Te>::BCC(int v, int &clock, Stack<int>& S){
 	status(v) = VISITED;
 }
 #undef hca
+
+template<typename Tv, typename Te>
+template<typename PU>
+void Graph<Tv, Te>::pfs(int s, PU prioUpdater)
+{
+	reset();
+	int v = s;
+	do{
+		if(status(v) == UNDISCOVERED)
+		{
+			PFS(v, prioUpdater);
+		}
+	}while(s != (v = (++v % n)));
+	std::cout << "优先级遍历结束" << std::endl;
+}
+
+template<typename Tv, typename Te>
+template<typename PU>
+void Graph<Tv, Te>::PFS(int s, PU prioUpdater)
+{
+	priority(s) = 0;
+	status(s) = VISITED;
+	parent(s) = -1;
+	std::cout << vertex(s) << std::endl;
+	while(1)
+	{
+		for(int w = firstNbr(s) ; w > -1 ; w = nextNbr(s, w))
+		{
+			//更新顶点w的优先级及其父节点
+			prioUpdater(this, s, w);
+		}
+		
+		for(int shortest = INT_MAX , w = 0 ; w < n ; w++)
+		{
+			//从尚未加入遍历树的顶点中
+			if(status(w) == UNDISCOVERED)
+			{
+				//选出下一个
+				if(shortest > priority(w))
+				{
+					shortest = priority(w);
+					s = w;
+				}
+			}
+		}
+		if(status(s) == VISITED)
+			break;
+		std::cout << vertex(s) << std::endl;
+		status(s) = VISITED;
+		type(parent(s), s) = TREE;
+	}
+}
+
+template<typename Tv, typename Te>
+struct BfsPU{
+	virtual void operator()(Graph<Tv, Te> *g, int uk, int v){
+		//不能对任意的邻居设置优先级，就像之前加入队列那样，这里仅仅把UNDISCOVERED的设置优先级即可,所以DISCOVERED这个状态还是没用
+		if(g->status(v) == UNDISCOVERED && g->priority(v) > g->priority(uk) + 1){
+			//这里相当于设置每条边的权重都是1
+			g->priority(v) = g->priority(uk) + 1;
+			g->parent(v) = uk;	
+			
+		}
+		
+	}
+};
+
+template<typename Tv, typename Te>
+struct DfsPU{
+	//深度优先搜索可以认为是越晚被发现，越早visit，之前理解有误，以为优先级搜索可以确定“结束”访问的顺序，但是其实只能确定开始访问的顺序
+	virtual void operator()(Graph<Tv, Te> *g, int uk, int v){
+		//只要有一个可以修改就返回
+		if(g->status(v) == UNDISCOVERED && g->priority(v) > g->priority(uk) - 1){
+			g->priority(v) = g->priority(uk) - 1;
+			g->parent(v) = uk;
+			return ;
+		}
+		
+	}
+};
+
+template<typename Tv, typename Te>
+struct PrimPU{
+	virtual void operator()(Graph<Tv, Te> *g, int uk, int v)
+	{
+		if(status(v) == UNDISCOVERED)
+		{
+			//此时优先级数表示到Tk的距离
+			if(g->priority(v) > g->weight(uk, v))
+			{
+				g->priority(v) = g->weight(uk, v);
+				//这里parent不是设置了就不能改了，如果一旦在之后被选中，那么这个parent设置就是有效的，如果没被选中，parent就会被改
+				g->parent(v) = uk;
+			}
+		}
+	}
+};
+
+template<typename Tv, typename Te>
+struct DijkstraPU{
+	virtual void operator()(Graph<Tv, Te> *g, int uk, int v)
+	{
+		if(status(v) == UNDISCOVERED)
+		{
+			//此时优先级表示到源点s的距离
+			if(g->priority(v) > g->weight(uk, v) + g->priority(uk))
+			{
+				g->priority(v) = g->weight(uk, v) + g->priority(uk);
+				g->parent(v) = uk;
+			}
+		}
+	}
+};

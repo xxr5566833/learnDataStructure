@@ -20,6 +20,8 @@
 #include "Skiplist.h"
 #include "Graph.h"
 #include "GraphMatrix.h"
+#include "BTree.h"
+#include "Splay.h"
 unsigned long int next = 1;
 int myrand2(void)
 {
@@ -452,6 +454,7 @@ void testBfs()
 	g.insert(0, 0, 6, 5);
 	g.insert(0, 0, 6, 1);
 	g.bfs(7);
+	g.pfs(7, BfsPU<char, int>());
 }
 
 void testDfs()
@@ -476,6 +479,7 @@ void testDfs()
 	g.insert(0, 0, 6, 2);
 	
 	g.dfs(0);
+	g.pfs(0, DfsPU<char, int>());
 }
 
 void testTsort()
@@ -501,9 +505,51 @@ void testTsort()
 		std::cout<< s->pop() << std::endl;
 }
 
+void testBTree()
+{
+	
+	BTree<int> *b = new BTree<int>();
+	b->insert(53);
+	b->insert(36);
+	b->insert(77);
+	b->insert(89);
+	b->insert(19);
+	b->insert(41);
+	b->insert(51);
+	b->insert(75);
+	b->insert(79);
+	b->insert(84);
+	b->insert(97);
+	b->remove(53);
+	b->remove(36);
+	b->remove(77);
+	b->remove(89);
+	b->remove(19);
+	b->remove(41);
+	b->remove(51);
+	b->remove(75);
+	b->remove(79);
+	b->remove(84);
+	b->remove(97);
+}
+
+void testSplay(){
+	Splay<int> *s = new Splay<int>();
+	//发现如果按照1-8的顺序插入，会发现树会严重左倾
+	s->insert(1);
+	s->insert(2);
+	s->insert(3);
+	s->insert(4);
+	s->insert(5);
+	s->insert(6);
+	s->insert(7);
+	s->insert(8);
+	s->search(1);
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	testTsort();
+	testSplay();
 	return 0;
 }
 
